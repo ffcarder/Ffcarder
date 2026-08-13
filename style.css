@@ -43,10 +43,8 @@ main {
 }
 
 .hero {
-  min-height: 500px;
-  padding: 90px 6%;
-  display: flex;
-  align-items: center;
+  min-height: auto;
+  padding: 55px 6%;
   background:
     radial-gradient(circle at 80% 20%, rgba(255, 184, 0, 0.08), transparent 35%),
     linear-gradient(135deg, #111722, #080a0f 60%);
@@ -75,32 +73,15 @@ h1 span {
 
 .sub {
   max-width: 720px;
-  margin: 30px 0;
+  margin: 30px 0 0;
   color: #9da7b8;
   font-size: 20px;
   line-height: 1.6;
 }
 
-.btn {
-  display: inline-block;
-  padding: 17px 30px;
-  border: 0;
-  border-radius: 16px;
-  background: #ffb800;
-  color: #080a0f;
-  font-size: 17px;
-  font-weight: 800;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background: #ffc533;
-}
-
 #services {
-  padding: 70px 6%;
-  min-height: 600px;
+  padding: 55px 6%;
+  min-height: auto;
 }
 
 .section-head {
@@ -320,7 +301,6 @@ h1 span {
   text-align: center;
 }
 
-/* QR FIX */
 .qr-wrap {
   width: 100%;
   max-width: 260px;
@@ -416,7 +396,7 @@ footer {
 
   .hero {
     min-height: auto;
-    padding: 65px 20px;
+    padding: 35px 20px 45px;
   }
 
   h1 {
@@ -425,11 +405,13 @@ footer {
   }
 
   .sub {
+    margin-top: 24px;
     font-size: 17px;
+    line-height: 1.55;
   }
 
   #services {
-    padding: 50px 20px;
+    padding: 45px 20px;
   }
 
   .section-head {
