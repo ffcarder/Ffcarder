@@ -1,4 +1,4 @@
-const SUPABASE_URL = "https://wlldnjdgnqnnwtdakkbg.supabase.co";
+const SUPABASE_URL = "https://wlldnjdgngnnwtdakkbg.supabase.co";
 const SUPABASE_KEY = "sb_publishable_LRDs-toBVkcc0tfhts_stA_mirTYqPz";
 
 const supabaseClient = window.supabase.createClient(
@@ -360,6 +360,11 @@ function closeCheckout() {
 }
 
 function showPayment() {
+  if (!selected) {
+    alert("Please select a service first.");
+    return;
+  }
+
   const value =
     document
       .getElementById("uid")
@@ -390,17 +395,21 @@ function showPayment() {
 
   closeCheckout();
 
-  document
-    .getElementById("payment")
-    .classList
-    .remove("hidden");
+  const payment =
+    document.getElementById("payment");
+
+  if (payment) {
+    payment.classList.remove("hidden");
+  }
 }
 
 function closePayment() {
-  document
-    .getElementById("payment")
-    .classList
-    .add("hidden");
+  const payment =
+    document.getElementById("payment");
+
+  if (payment) {
+    payment.classList.add("hidden");
+  }
 }
 
 function copyUPI() {
@@ -499,22 +508,18 @@ async function submitOrder() {
     status: "pending"
   };
 
-  console.log(
-    "ORDER PAYLOAD:",
-    order
-  );
+  console.log("ORDER PAYLOAD:", order);
 
   try {
-    const { error } =
+    const response =
       await supabaseClient
         .from("orders")
         .insert([order]);
 
+    const error = response.error;
+
     if (error) {
-      console.error(
-        "SUPABASE ERROR:",
-        error
-      );
+      console.error("SUPABASE ERROR:", error);
 
       if (status) {
         status.textContent =
@@ -555,18 +560,22 @@ async function submitOrder() {
 
   } catch (error) {
     console.error(
-      "UNEXPECTED ERROR:",
+      "UNEXPECTED / NETWORK ERROR:",
       error
     );
 
     if (status) {
       status.textContent =
-        "Something went wrong.";
+        "Network error. Please try again.";
     }
 
     alert(
-      "Unexpected Error\n\n" +
-      (error.message || error)
+      "SUPABASE NETWORK ERROR\n\n" +
+      "Message: " +
+      (error && error.message
+        ? error.message
+        : "Load failed") +
+      "\n\nCheck your Supabase URL, Data API and deployment."
     );
 
   } finally {
