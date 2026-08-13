@@ -1,10 +1,14 @@
-const SUPABASE_URL = "https://wlldnjdgngnnwtdakkbg.supabase.co";
-const SUPABASE_KEY = "sb_publishable_LRDs-toBVkcc0tfhts_stA_mirTYqPz";
+const SUPABASE_URL =
+  "https://wlldnjdgngnnwtdakkbg.supabase.co";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const SUPABASE_KEY =
+  "sb_publishable_LRDs-toBVkcc0tfhts_stA_mirTYqPz";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 const UPI = "ffcarderupta@fam";
 
@@ -125,82 +129,137 @@ const services = [
 let selected = null;
 let activeCat = categories[0].id;
 
+
+/* ==========================================
+   PRICE
+   ========================================== */
+
 function priceLabel(service) {
+
   if (service.priceText) {
     return service.priceText;
   }
 
   if (service.price) {
-    return "₹" + service.price.toLocaleString("en-IN");
+    return "₹" +
+      service.price.toLocaleString("en-IN");
   }
 
   return "Custom";
 }
 
+
+/* ==========================================
+   CATEGORY NAV
+   ========================================== */
+
 function renderNav() {
-  const nav = document.getElementById("catNav");
+
+  const nav =
+    document.getElementById("catNav");
 
   if (!nav) return;
 
-  nav.innerHTML = categories
-    .map(category => `
-      <button
-        class="cat-btn ${category.id === activeCat ? "active" : ""}"
-        data-cat="${category.id}"
-        onclick="selectCategory('${category.id}')">
-        ${category.name}
-      </button>
-    `)
-    .join("");
+  nav.innerHTML =
+    categories
+      .map(category => `
+        <button
+          class="cat-btn ${
+            category.id === activeCat
+              ? "active"
+              : ""
+          }"
+          data-cat="${category.id}"
+          onclick="selectCategory('${category.id}')">
+          ${category.name}
+        </button>
+      `)
+      .join("");
 }
 
+
 function selectCategory(id) {
+
   activeCat = id;
+
   renderNav();
+
   renderCards();
 }
 
+
+/* ==========================================
+   SERVICE CARDS
+   ========================================== */
+
 function renderCards() {
-  const grid = document.getElementById("serviceGrid");
+
+  const grid =
+    document.getElementById(
+      "serviceGrid"
+    );
 
   if (!grid) return;
 
-  grid.innerHTML = services
-    .map((service, index) => ({
-      service,
-      index
-    }))
-    .filter(({ service }) => service.cat === activeCat)
-    .map(({ service, index }) => `
-      <article class="card">
-        <h3>${service.name}</h3>
+  grid.innerHTML =
+    services
+      .map((service, index) => ({
+        service,
+        index
+      }))
+      .filter(
+        ({ service }) =>
+          service.cat === activeCat
+      )
+      .map(
+        ({ service, index }) => `
+          <article class="card">
 
-        <p>${service.desc}</p>
+            <h3>
+              ${service.name}
+            </h3>
 
-        ${
-          service.meta
-            ? `<p class="meta">${service.meta}</p>`
-            : ""
-        }
+            <p>
+              ${service.desc}
+            </p>
 
-        <div class="row">
-          <span class="price">
-            ${priceLabel(service)}
-          </span>
+            ${
+              service.meta
+                ? `
+                  <p class="meta">
+                    ${service.meta}
+                  </p>
+                `
+                : ""
+            }
 
-          <button
-            class="smallbtn"
-            onclick="openCheckout(${index})">
-            Buy now
-          </button>
-        </div>
-      </article>
-    `)
-    .join("");
+            <div class="row">
 
-  const tgNote = document.getElementById("tgContact");
+              <span class="price">
+                ${priceLabel(service)}
+              </span>
+
+              <button
+                class="smallbtn"
+                onclick="openCheckout(${index})">
+                Buy now
+              </button>
+
+            </div>
+
+          </article>
+        `
+      )
+      .join("");
+
+
+  const tgNote =
+    document.getElementById(
+      "tgContact"
+    );
 
   if (tgNote) {
+
     tgNote.innerHTML =
       activeCat === "diamonds"
         ? `
@@ -209,105 +268,208 @@ function renderCards() {
             href="https://t.me/carderffgupta"
             target="_blank"
             rel="noopener">
-            Contact Admin on Telegram (@carderffgupta)
+            Contact Admin on Telegram
           </a>
         `
         : "";
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const grid = document.getElementById("serviceGrid");
 
-  if (!grid) {
-    console.error("serviceGrid not found");
-    return;
+/* ==========================================
+   PAGE LOAD
+   ========================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    const grid =
+      document.getElementById(
+        "serviceGrid"
+      );
+
+    if (!grid) {
+
+      console.error(
+        "serviceGrid not found"
+      );
+
+      return;
+    }
+
+    renderNav();
+
+    renderCards();
+
+    createTrackOrderUI();
+
   }
+);
 
-  renderNav();
-  renderCards();
-});
+
+/* ==========================================
+   SERVICE HELPERS
+   ========================================== */
 
 function isUnsubscribe(service) {
-  return service && service.cat === "unsubscribe";
+
+  return (
+    service &&
+    service.cat === "unsubscribe"
+  );
+
 }
 
+
+/* ==========================================
+   CHECKOUT
+   ========================================== */
+
 function openCheckout(index) {
-  selected = services[index];
+
+  selected =
+    services[index];
 
   const checkoutTitle =
-    document.getElementById("checkoutTitle");
+    document.getElementById(
+      "checkoutTitle"
+    );
 
   const checkoutPrice =
-    document.getElementById("checkoutPrice");
+    document.getElementById(
+      "checkoutPrice"
+    );
 
   if (checkoutTitle) {
-    checkoutTitle.textContent = selected.name;
+
+    checkoutTitle.textContent =
+      selected.name;
+
   }
 
   if (checkoutPrice) {
-    checkoutPrice.textContent = priceLabel(selected);
+
+    checkoutPrice.textContent =
+      priceLabel(selected);
+
   }
 
+
   const idInput =
-    document.getElementById("uid");
+    document.getElementById(
+      "uid"
+    );
 
   const labelText =
-    document.getElementById("uidLabelText");
+    document.getElementById(
+      "uidLabelText"
+    );
 
   const playerField =
-    document.getElementById("playerField");
+    document.getElementById(
+      "playerField"
+    );
 
   const playerInput =
-    document.getElementById("player");
+    document.getElementById(
+      "player"
+    );
 
   const playerLabelText =
-    document.getElementById("playerLabelText");
+    document.getElementById(
+      "playerLabelText"
+    );
 
   const playerHelp =
-    document.getElementById("playerHelp");
+    document.getElementById(
+      "playerHelp"
+    );
+
 
   if (isUnsubscribe(selected)) {
-    labelText.textContent = "Gmail address";
+
+    labelText.textContent =
+      "Gmail address";
 
     idInput.value = "";
 
-    idInput.setAttribute("inputmode", "email");
-    idInput.setAttribute("type", "email");
+    idInput.setAttribute(
+      "inputmode",
+      "email"
+    );
+
+    idInput.setAttribute(
+      "type",
+      "email"
+    );
+
     idInput.setAttribute(
       "placeholder",
       "yourname@gmail.com"
     );
 
     if (playerField) {
-      playerField.style.display = "none";
+
+      playerField.style.display =
+        "none";
+
     }
+
   } else {
-    labelText.textContent = "Free Fire UID";
+
+    labelText.textContent =
+      "Free Fire UID";
 
     idInput.value = "";
 
-    idInput.setAttribute("inputmode", "numeric");
-    idInput.setAttribute("type", "text");
+    idInput.setAttribute(
+      "inputmode",
+      "numeric"
+    );
+
+    idInput.setAttribute(
+      "type",
+      "text"
+    );
+
     idInput.setAttribute(
       "placeholder",
       "Enter UID"
     );
 
     if (playerField) {
-      playerField.style.display = "";
+
+      playerField.style.display =
+        "";
+
     }
+
   }
+
 
   if (playerInput) {
+
     playerInput.value = "";
+
   }
 
-  if (selected.cat === "diamonds") {
-    playerLabelText.textContent = "Contact Number";
 
-    playerInput.setAttribute("type", "tel");
-    playerInput.setAttribute("inputmode", "tel");
+  if (selected.cat === "diamonds") {
+
+    playerLabelText.textContent =
+      "Contact Number";
+
+    playerInput.setAttribute(
+      "type",
+      "tel"
+    );
+
+    playerInput.setAttribute(
+      "inputmode",
+      "tel"
+    );
+
     playerInput.setAttribute(
       "placeholder",
       "Enter your WhatsApp/Telegram number"
@@ -315,14 +477,26 @@ function openCheckout(index) {
 
     playerHelp.textContent =
       "Add your contact number so I can contact you about your order.";
+
   }
 
-  else if (selected.cat === "redeem") {
+  else if (
+    selected.cat === "redeem"
+  ) {
+
     playerLabelText.textContent =
       "Email / Contact Number";
 
-    playerInput.setAttribute("type", "text");
-    playerInput.setAttribute("inputmode", "text");
+    playerInput.setAttribute(
+      "type",
+      "text"
+    );
+
+    playerInput.setAttribute(
+      "inputmode",
+      "text"
+    );
+
     playerInput.setAttribute(
       "placeholder",
       "Enter email or contact number"
@@ -330,259 +504,1169 @@ function openCheckout(index) {
 
     playerHelp.textContent =
       "Add your contact details for code delivery.";
+
   }
 
   else {
+
     playerLabelText.textContent =
       "Player name (optional)";
 
-    playerInput.setAttribute("type", "text");
-    playerInput.setAttribute("inputmode", "text");
+    playerInput.setAttribute(
+      "type",
+      "text"
+    );
+
+    playerInput.setAttribute(
+      "inputmode",
+      "text"
+    );
+
     playerInput.setAttribute(
       "placeholder",
       "Enter player name"
     );
 
-    playerHelp.textContent = "";
+    playerHelp.textContent =
+      "";
+
   }
 
+
   document
-    .getElementById("checkout")
+    .getElementById(
+      "checkout"
+    )
     .classList
     .remove("hidden");
+
 }
+
 
 function closeCheckout() {
+
   document
-    .getElementById("checkout")
+    .getElementById(
+      "checkout"
+    )
     .classList
     .add("hidden");
+
 }
 
+
+/* ==========================================
+   PAYMENT
+   ========================================== */
+
 function showPayment() {
+
   if (!selected) {
-    alert("Please select a service first.");
+
+    alert(
+      "Please select a service first."
+    );
+
     return;
   }
 
+
   const value =
     document
-      .getElementById("uid")
+      .getElementById(
+        "uid"
+      )
       .value
       .trim();
 
-  if (isUnsubscribe(selected)) {
+
+  if (
+    isUnsubscribe(
+      selected
+    )
+  ) {
+
     const gmailPattern =
       /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
 
+
     if (!value) {
-      alert("Gmail address enter karo.");
+
+      alert(
+        "Gmail address enter karo."
+      );
+
       return;
     }
 
-    if (!gmailPattern.test(value)) {
+
+    if (
+      !gmailPattern.test(
+        value
+      )
+    ) {
+
       alert(
-        "Sahi Gmail address enter karo (e.g. yourname@gmail.com)."
+        "Sahi Gmail address enter karo."
       );
+
       return;
     }
+
   } else {
+
     if (!value) {
-      alert("Free Fire UID enter karo.");
+
+      alert(
+        "Free Fire UID enter karo."
+      );
+
       return;
     }
+
   }
+
 
   closeCheckout();
 
+
   const payment =
-    document.getElementById("payment");
+    document.getElementById(
+      "payment"
+    );
+
 
   if (payment) {
-    payment.classList.remove("hidden");
+
+    payment.classList.remove(
+      "hidden"
+    );
+
   }
+
 }
+
 
 function closePayment() {
+
   const payment =
-    document.getElementById("payment");
+    document.getElementById(
+      "payment"
+    );
+
 
   if (payment) {
-    payment.classList.add("hidden");
+
+    payment.classList.add(
+      "hidden"
+    );
+
   }
+
 }
 
+
+/* ==========================================
+   COPY UPI
+   ========================================== */
+
 function copyUPI() {
+
   if (
     navigator.clipboard &&
     navigator.clipboard.writeText
   ) {
+
     navigator.clipboard
       .writeText(UPI)
-      .then(() => {
-        alert("UPI ID copied: " + UPI);
-      })
-      .catch(() => {
-        alert("UPI ID: " + UPI);
-      });
+      .then(
+        () => {
+
+          alert(
+            "UPI ID copied: " +
+            UPI
+          );
+
+        }
+      )
+      .catch(
+        () => {
+
+          alert(
+            "UPI ID: " +
+            UPI
+          );
+
+        }
+      );
+
   } else {
-    alert("UPI ID: " + UPI);
+
+    alert(
+      "UPI ID: " +
+      UPI
+    );
+
   }
+
 }
 
+
+/* ==========================================
+   SUBMIT ORDER
+   ========================================== */
+
 async function submitOrder() {
+
   const utrInput =
-    document.getElementById("utr");
+    document.getElementById(
+      "utr"
+    );
 
   const uidInput =
-    document.getElementById("uid");
+    document.getElementById(
+      "uid"
+    );
 
   const playerInput =
-    document.getElementById("player");
+    document.getElementById(
+      "player"
+    );
 
   const status =
-    document.getElementById("status");
+    document.getElementById(
+      "status"
+    );
+
 
   const utr =
     utrInput
       ? utrInput.value.trim()
       : "";
 
+
   const uid =
     uidInput
       ? uidInput.value.trim()
       : "";
+
 
   const player =
     playerInput
       ? playerInput.value.trim()
       : "";
 
+
   if (!utr) {
+
     alert(
       "Payment ke baad UTR / Transaction ID enter karo."
     );
+
     return;
   }
 
+
   if (!selected) {
-    alert("Please select a service first.");
+
+    alert(
+      "Please select a service first."
+    );
+
     return;
   }
+
 
   const submitButton =
     document.querySelector(
       "#payment .full"
     );
 
+
   if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.textContent = "Submitting...";
+
+    submitButton.disabled =
+      true;
+
+    submitButton.textContent =
+      "Submitting...";
+
   }
+
 
   if (status) {
+
     status.textContent =
       "Submitting your order...";
+
   }
 
+
   let contact = null;
+
   let playerName = null;
+
 
   if (
     selected.cat === "diamonds" ||
     selected.cat === "redeem"
   ) {
-    contact = player || null;
+
+    contact =
+      player || null;
+
   } else {
-    playerName = player || null;
+
+    playerName =
+      player || null;
+
   }
 
+
   const order = {
-    service_name: selected.name,
-    category: selected.cat,
-    amount: selected.price,
-    uid: uid || null,
-    player_name: playerName,
-    contact: contact,
-    utr: utr,
-    status: "pending"
+
+    service_name:
+      selected.name,
+
+    category:
+      selected.cat,
+
+    amount:
+      selected.price,
+
+    uid:
+      uid || null,
+
+    player_name:
+      playerName,
+
+    contact:
+      contact,
+
+    utr:
+      utr,
+
+    status:
+      "pending"
+
   };
 
-  console.log("ORDER PAYLOAD:", order);
+
+  console.log(
+    "ORDER PAYLOAD:",
+    order
+  );
+
 
   try {
-    const response =
+
+    /*
+      Important:
+      .select("id") returns the newly
+      created order ID.
+    */
+
+    const {
+      data,
+      error
+    } =
       await supabaseClient
         .from("orders")
-        .insert([order]);
+        .insert([
+          order
+        ])
+        .select("id")
+        .single();
 
-    const error = response.error;
 
     if (error) {
-      console.error("SUPABASE ERROR:", error);
+
+      console.error(
+        "SUPABASE ERROR:",
+        error
+      );
+
 
       if (status) {
+
         status.textContent =
           "Order submit nahi hua.";
+
       }
+
 
       alert(
         "SUPABASE ERROR\n\n" +
         "Message: " +
-        (error.message || "Unknown") +
-        "\n\nDetails: " +
-        (error.details || "None") +
-        "\n\nHint: " +
-        (error.hint || "None") +
+        (
+          error.message ||
+          "Unknown"
+        ) +
         "\n\nCode: " +
-        (error.code || "Unknown")
+        (
+          error.code ||
+          "Unknown"
+        )
       );
 
+
       return;
+
     }
 
-    console.log(
-      "ORDER SUBMITTED SUCCESSFULLY"
+
+    if (!data || !data.id) {
+
+      throw new Error(
+        "Order ID nahi mila."
+      );
+
+    }
+
+
+    const orderId =
+      data.id;
+
+
+    /*
+      Save order information
+      on this device.
+    */
+
+    localStorage.setItem(
+      "ffm_last_order",
+      JSON.stringify({
+        id:
+          orderId,
+        utr:
+          utr
+      })
     );
+
 
     if (status) {
+
       status.textContent =
         "Order submitted successfully. Payment is pending verification.";
+
     }
+
 
     alert(
-      "Order submitted successfully!"
+      "Order submitted successfully!\n\n" +
+      "Order ID: #" +
+      orderId
     );
 
+
     if (utrInput) {
-      utrInput.value = "";
+
+      utrInput.value =
+        "";
+
     }
 
+
+    closePayment();
+
+
+    /*
+      Show tracking immediately.
+    */
+
+    await checkOrderStatus(
+      orderId,
+      utr
+    );
+
+
   } catch (error) {
+
     console.error(
-      "UNEXPECTED / NETWORK ERROR:",
+      "ORDER ERROR:",
       error
     );
 
+
     if (status) {
+
       status.textContent =
         "Network error. Please try again.";
+
     }
+
 
     alert(
-      "SUPABASE NETWORK ERROR\n\n" +
-      "Message: " +
-      (error && error.message
-        ? error.message
-        : "Load failed") +
-      "\n\nCheck your Supabase URL, Data API and deployment."
+      "ORDER ERROR\n\n" +
+      (
+        error &&
+        error.message
+          ? error.message
+          : "Load failed"
+      )
     );
 
+
   } finally {
+
     if (submitButton) {
-      submitButton.disabled = false;
+
+      submitButton.disabled =
+        false;
+
       submitButton.textContent =
         "Submit Payment Details";
+
     }
+
   }
+
+}
+
+
+/* ==========================================
+   TRACK ORDER UI
+   ========================================== */
+
+function createTrackOrderUI() {
+
+  if (
+    document.getElementById(
+      "orderTracker"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const servicesSection =
+    document.getElementById(
+      "services"
+    );
+
+
+  if (!servicesSection) {
+
+    return;
+
+  }
+
+
+  const tracker =
+    document.createElement(
+      "section"
+    );
+
+
+  tracker.id =
+    "orderTracker";
+
+
+  tracker.style.cssText = `
+    max-width:760px;
+    margin:40px auto 0;
+    padding:22px;
+    background:#0b1017;
+    border:1px solid #273140;
+    border-radius:20px;
+  `;
+
+
+  tracker.innerHTML = `
+
+    <div
+      style="
+        color:#ffb800;
+        font-size:12px;
+        font-weight:800;
+        letter-spacing:3px;
+        margin-bottom:8px;
+      ">
+      ORDER TRACKING
+    </div>
+
+
+    <h2
+      style="
+        margin:0 0 8px;
+        color:#f5f7fb;
+        font-size:24px;
+      ">
+      Track your order
+    </h2>
+
+
+    <p
+      style="
+        margin:0 0 18px;
+        color:#8f9bad;
+        font-size:14px;
+        line-height:1.5;
+      ">
+      Enter your Order ID and UTR to check
+      the latest order status.
+    </p>
+
+
+    <div
+      style="
+        display:grid;
+        gap:10px;
+      ">
+
+      <input
+        id="trackOrderId"
+        type="text"
+        inputmode="numeric"
+        placeholder="Order ID"
+        style="
+          width:100%;
+          min-height:48px;
+          padding:0 14px;
+          background:#080c12;
+          color:#f5f7fb;
+          border:1px solid #303b4c;
+          border-radius:12px;
+          outline:none;
+        ">
+
+
+      <input
+        id="trackUTR"
+        type="text"
+        placeholder="UTR / Transaction ID"
+        style="
+          width:100%;
+          min-height:48px;
+          padding:0 14px;
+          background:#080c12;
+          color:#f5f7fb;
+          border:1px solid #303b4c;
+          border-radius:12px;
+          outline:none;
+        ">
+
+
+      <button
+        id="trackButton"
+        type="button"
+        style="
+          width:100%;
+          min-height:48px;
+          background:#ffb800;
+          color:#05070b;
+          border:0;
+          border-radius:12px;
+          font-weight:800;
+          cursor:pointer;
+        ">
+        Check Order Status
+      </button>
+
+    </div>
+
+
+    <div
+      id="orderResult"
+      style="
+        margin-top:18px;
+      ">
+    </div>
+
+  `;
+
+
+  servicesSection.appendChild(
+    tracker
+  );
+
+
+  document
+    .getElementById(
+      "trackButton"
+    )
+    .addEventListener(
+      "click",
+      trackOrder
+    );
+
+
+  /*
+    Automatically restore
+    last order on this device.
+  */
+
+  try {
+
+    const saved =
+      localStorage.getItem(
+        "ffm_last_order"
+      );
+
+
+    if (saved) {
+
+      const parsed =
+        JSON.parse(
+          saved
+        );
+
+
+      if (
+        parsed &&
+        parsed.id &&
+        parsed.utr
+      ) {
+
+        document.getElementById(
+          "trackOrderId"
+        ).value =
+          parsed.id;
+
+
+        document.getElementById(
+          "trackUTR"
+        ).value =
+          parsed.utr;
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "LOCAL STORAGE ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+/* ==========================================
+   TRACK ORDER
+   ========================================== */
+
+async function trackOrder() {
+
+  const idInput =
+    document.getElementById(
+      "trackOrderId"
+    );
+
+  const utrInput =
+    document.getElementById(
+      "trackUTR"
+    );
+
+  const result =
+    document.getElementById(
+      "orderResult"
+    );
+
+  const button =
+    document.getElementById(
+      "trackButton"
+    );
+
+
+  const orderId =
+    idInput
+      ? idInput.value.trim()
+      : "";
+
+
+  const utr =
+    utrInput
+      ? utrInput.value.trim()
+      : "";
+
+
+  if (!orderId) {
+
+    result.innerHTML = `
+      <div style="
+        padding:14px;
+        border-radius:12px;
+        background:#241b08;
+        border:1px solid #5b4610;
+        color:#ffcc4d;
+        font-size:14px;
+      ">
+        Order ID enter karo.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  if (!utr) {
+
+    result.innerHTML = `
+      <div style="
+        padding:14px;
+        border-radius:12px;
+        background:#241b08;
+        border:1px solid #5b4610;
+        color:#ffcc4d;
+        font-size:14px;
+      ">
+        UTR / Transaction ID enter karo.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Checking...";
+
+
+  result.innerHTML = `
+    <div style="
+      padding:14px;
+      color:#8f9bad;
+      font-size:14px;
+    ">
+      Checking order...
+    </div>
+  `;
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.rpc(
+        "get_order_status",
+        {
+          p_order_id:
+            Number(orderId),
+
+          p_utr:
+            utr
+        }
+      );
+
+
+    if (error) {
+
+      console.error(
+        "TRACK ERROR:",
+        error
+      );
+
+      throw error;
+
+    }
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      result.innerHTML = `
+        <div style="
+          padding:15px;
+          border-radius:12px;
+          background:#241014;
+          border:1px solid #55202a;
+          color:#ff7b88;
+          font-size:14px;
+          line-height:1.5;
+        ">
+          Order nahi mila.<br>
+          Order ID aur UTR check karo.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    const order =
+      data[0];
+
+
+    renderOrderStatus(
+      order
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "ORDER TRACKING ERROR:",
+      error
+    );
+
+
+    result.innerHTML = `
+      <div style="
+        padding:15px;
+        border-radius:12px;
+        background:#241014;
+        border:1px solid #55202a;
+        color:#ff7b88;
+        font-size:14px;
+        line-height:1.5;
+      ">
+        Status check nahi ho saka.<br><br>
+        ${
+          error.message ||
+          "Please try again."
+        }
+      </div>
+    `;
+
+  } finally {
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Check Order Status";
+
+  }
+
+}
+
+
+/* ==========================================
+   RENDER STATUS
+   ========================================== */
+
+function renderOrderStatus(
+  order
+) {
+
+  const result =
+    document.getElementById(
+      "orderResult"
+    );
+
+
+  const status =
+    String(
+      order.status ||
+      "pending"
+    ).toLowerCase();
+
+
+  let title =
+    "Payment Verification Pending";
+
+  let message =
+    "Your payment is waiting for manual verification.";
+
+  let icon =
+    "🟡";
+
+  let border =
+    "#5b4610";
+
+  let background =
+    "#241b08";
+
+  let color =
+    "#ffcc4d";
+
+
+  if (
+    status === "verified"
+  ) {
+
+    title =
+      "Payment Verified";
+
+    message =
+      "Your payment has been verified. Your order is being processed.";
+
+    icon =
+      "🔵";
+
+    border =
+      "#173c5c";
+
+    background =
+      "#0c1c2a";
+
+    color =
+      "#66bfff";
+
+  }
+
+
+  if (
+    status === "completed"
+  ) {
+
+    title =
+      "Order Successful";
+
+    message =
+      "Your order has been completed successfully.";
+
+    icon =
+      "🟢";
+
+    border =
+      "#164b2b";
+
+    background =
+      "#0b2115";
+
+    color =
+      "#5ee28a";
+
+  }
+
+
+  if (
+    status === "rejected"
+  ) {
+
+    title =
+      "Order Failed";
+
+    message =
+      "Your order/payment was rejected. Please contact the admin if you think this is a mistake.";
+
+    icon =
+      "🔴";
+
+    border =
+      "#55202a";
+
+    background =
+      "#241014";
+
+    color =
+      "#ff7b88";
+
+  }
+
+
+  result.innerHTML = `
+
+    <div
+      style="
+        padding:18px;
+        border-radius:15px;
+        background:${background};
+        border:1px solid ${border};
+      ">
+
+      <div
+        style="
+          color:${color};
+          font-size:17px;
+          font-weight:850;
+          margin-bottom:7px;
+        ">
+        ${icon} ${title}
+      </div>
+
+
+      <div
+        style="
+          color:#aeb8c9;
+          font-size:14px;
+          line-height:1.5;
+          margin-bottom:12px;
+        ">
+        ${message}
+      </div>
+
+
+      <div
+        style="
+          color:#7f899a;
+          font-size:13px;
+          line-height:1.7;
+        ">
+
+        Order:
+        <strong
+          style="color:#dce2ec;">
+          #${order.id}
+        </strong>
+
+        <br>
+
+        Service:
+        <strong
+          style="color:#dce2ec;">
+          ${escapeHTML(
+            order.service_name ||
+            "-"
+          )}
+        </strong>
+
+        <br>
+
+        Amount:
+        <strong
+          style="color:#dce2ec;">
+          ₹${Number(
+            order.amount || 0
+          ).toLocaleString("en-IN")}
+        </strong>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ==========================================
+   HTML ESCAPE
+   ========================================== */
+
+function escapeHTML(
+  value
+) {
+
+  return String(
+    value
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
