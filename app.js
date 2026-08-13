@@ -12,15 +12,41 @@ const supabaseClient =
 
 const UPI = "ffcarderupta@fam";
 
+
+/* ==========================================
+   CATEGORIES
+   ========================================== */
+
 const categories = [
-  { id: "unsubscribe", name: "Unsubscribe" },
-  { id: "craftland", name: "Craftland Bots" },
-  { id: "guild", name: "Guild Glory" },
-  { id: "diamonds", name: "Free Fire Carding" },
-  { id: "redeem", name: "Play Store Redeem Code" }
+  {
+    id: "unsubscribe",
+    name: "Unsubscribe"
+  },
+  {
+    id: "craftland",
+    name: "Craftland Bots"
+  },
+  {
+    id: "guild",
+    name: "Guild Glory"
+  },
+  {
+    id: "diamonds",
+    name: "Free Fire Carding"
+  },
+  {
+    id: "redeem",
+    name: "Play Store Redeem Code"
+  }
 ];
 
+
+/* ==========================================
+   SERVICES
+   ========================================== */
+
 const services = [
+
   {
     cat: "unsubscribe",
     name: "Single Unsubscribe",
@@ -28,6 +54,7 @@ const services = [
     meta: "Delivery: 5 minutes",
     price: 600
   },
+
   {
     cat: "unsubscribe",
     name: "Double Unsubscribe",
@@ -36,6 +63,7 @@ const services = [
     price: 1000
   },
 
+
   {
     cat: "craftland",
     name: "Craftland Followers",
@@ -43,6 +71,7 @@ const services = [
     meta: "Limit 200/day • 6hr–24hr",
     price: 25
   },
+
   {
     cat: "craftland",
     name: "Craftland Followers (Fast Plan)",
@@ -50,6 +79,7 @@ const services = [
     meta: "Limit 25k/day • 5min–2hr",
     price: 100
   },
+
   {
     cat: "craftland",
     name: "Craftland Map Likes",
@@ -57,6 +87,7 @@ const services = [
     meta: "Limit 2k/day • 3hr–15hr",
     price: 50
   },
+
   {
     cat: "craftland",
     name: "Craftland Map Stars",
@@ -64,6 +95,7 @@ const services = [
     meta: "Limit 150/day • 6hr–24hr",
     price: 30
   },
+
   {
     cat: "craftland",
     name: "Craftland Level Up",
@@ -73,6 +105,7 @@ const services = [
     priceText: "From ₹20"
   },
 
+
   {
     cat: "guild",
     name: "Guild Level 7",
@@ -80,6 +113,7 @@ const services = [
     meta: "Delivery: 3 days",
     price: 500
   },
+
   {
     cat: "guild",
     name: "Guild Region Top 15",
@@ -88,6 +122,7 @@ const services = [
     price: 1400
   },
 
+
   {
     cat: "diamonds",
     name: "4,000 Diamonds",
@@ -95,6 +130,7 @@ const services = [
     meta: "Manual delivery",
     price: 1000
   },
+
   {
     cat: "diamonds",
     name: "10,000 Diamonds",
@@ -103,6 +139,7 @@ const services = [
     price: 2000
   },
 
+
   {
     cat: "redeem",
     name: "₹100 Play Store Redeem Code",
@@ -110,6 +147,7 @@ const services = [
     meta: "Digital delivery",
     price: 100
   },
+
   {
     cat: "redeem",
     name: "₹500 Play Store Redeem Code",
@@ -117,6 +155,7 @@ const services = [
     meta: "Digital delivery",
     price: 500
   },
+
   {
     cat: "redeem",
     name: "₹1,000 Play Store Redeem Code",
@@ -124,10 +163,14 @@ const services = [
     meta: "Digital delivery",
     price: 1000
   }
+
 ];
 
+
 let selected = null;
-let activeCat = categories[0].id;
+
+let activeCat =
+  categories[0].id;
 
 
 /* ==========================================
@@ -141,8 +184,10 @@ function priceLabel(service) {
   }
 
   if (service.price) {
-    return "₹" +
-      service.price.toLocaleString("en-IN");
+    return (
+      "₹" +
+      service.price.toLocaleString("en-IN")
+    );
   }
 
   return "Custom";
@@ -150,7 +195,7 @@ function priceLabel(service) {
 
 
 /* ==========================================
-   CATEGORY NAV
+   CATEGORY NAVIGATION
    ========================================== */
 
 function renderNav() {
@@ -163,6 +208,7 @@ function renderNav() {
   nav.innerHTML =
     categories
       .map(category => `
+
         <button
           class="cat-btn ${
             category.id === activeCat
@@ -171,8 +217,11 @@ function renderNav() {
           }"
           data-cat="${category.id}"
           onclick="selectCategory('${category.id}')">
+
           ${category.name}
+
         </button>
+
       `)
       .join("");
 }
@@ -203,16 +252,20 @@ function renderCards() {
 
   grid.innerHTML =
     services
+
       .map((service, index) => ({
         service,
         index
       }))
+
       .filter(
         ({ service }) =>
           service.cat === activeCat
       )
+
       .map(
         ({ service, index }) => `
+
           <article class="card">
 
             <h3>
@@ -242,14 +295,18 @@ function renderCards() {
               <button
                 class="smallbtn"
                 onclick="openCheckout(${index})">
+
                 Buy now
+
               </button>
 
             </div>
 
           </article>
+
         `
       )
+
       .join("");
 
 
@@ -258,19 +315,25 @@ function renderCards() {
       "tgContact"
     );
 
+
   if (tgNote) {
 
     tgNote.innerHTML =
       activeCat === "diamonds"
+
         ? `
           Need help?
+
           <a
             href="https://t.me/carderffgupta"
             target="_blank"
             rel="noopener">
+
             Contact Admin on Telegram
+
           </a>
         `
+
         : "";
   }
 }
@@ -331,15 +394,18 @@ function openCheckout(index) {
   selected =
     services[index];
 
+
   const checkoutTitle =
     document.getElementById(
       "checkoutTitle"
     );
 
+
   const checkoutPrice =
     document.getElementById(
       "checkoutPrice"
     );
+
 
   if (checkoutTitle) {
 
@@ -347,6 +413,7 @@ function openCheckout(index) {
       selected.name;
 
   }
+
 
   if (checkoutPrice) {
 
@@ -361,25 +428,30 @@ function openCheckout(index) {
       "uid"
     );
 
+
   const labelText =
     document.getElementById(
       "uidLabelText"
     );
+
 
   const playerField =
     document.getElementById(
       "playerField"
     );
 
+
   const playerInput =
     document.getElementById(
       "player"
     );
 
+
   const playerLabelText =
     document.getElementById(
       "playerLabelText"
     );
+
 
   const playerHelp =
     document.getElementById(
@@ -392,22 +464,27 @@ function openCheckout(index) {
     labelText.textContent =
       "Gmail address";
 
+
     idInput.value = "";
+
 
     idInput.setAttribute(
       "inputmode",
       "email"
     );
 
+
     idInput.setAttribute(
       "type",
       "email"
     );
 
+
     idInput.setAttribute(
       "placeholder",
       "yourname@gmail.com"
     );
+
 
     if (playerField) {
 
@@ -421,22 +498,27 @@ function openCheckout(index) {
     labelText.textContent =
       "Free Fire UID";
 
+
     idInput.value = "";
+
 
     idInput.setAttribute(
       "inputmode",
       "numeric"
     );
 
+
     idInput.setAttribute(
       "type",
       "text"
     );
 
+
     idInput.setAttribute(
       "placeholder",
       "Enter UID"
     );
+
 
     if (playerField) {
 
@@ -455,25 +537,31 @@ function openCheckout(index) {
   }
 
 
-  if (selected.cat === "diamonds") {
+  if (
+    selected.cat === "diamonds"
+  ) {
 
     playerLabelText.textContent =
       "Contact Number";
+
 
     playerInput.setAttribute(
       "type",
       "tel"
     );
 
+
     playerInput.setAttribute(
       "inputmode",
       "tel"
     );
 
+
     playerInput.setAttribute(
       "placeholder",
       "Enter your WhatsApp/Telegram number"
     );
+
 
     playerHelp.textContent =
       "Add your contact number so I can contact you about your order.";
@@ -487,20 +575,24 @@ function openCheckout(index) {
     playerLabelText.textContent =
       "Email / Contact Number";
 
+
     playerInput.setAttribute(
       "type",
       "text"
     );
+
 
     playerInput.setAttribute(
       "inputmode",
       "text"
     );
 
+
     playerInput.setAttribute(
       "placeholder",
       "Enter email or contact number"
     );
+
 
     playerHelp.textContent =
       "Add your contact details for code delivery.";
@@ -512,20 +604,24 @@ function openCheckout(index) {
     playerLabelText.textContent =
       "Player name (optional)";
 
+
     playerInput.setAttribute(
       "type",
       "text"
     );
+
 
     playerInput.setAttribute(
       "inputmode",
       "text"
     );
 
+
     playerInput.setAttribute(
       "placeholder",
       "Enter player name"
     );
+
 
     playerHelp.textContent =
       "";
@@ -581,9 +677,7 @@ function showPayment() {
 
 
   if (
-    isUnsubscribe(
-      selected
-    )
+    isUnsubscribe(selected)
   ) {
 
     const gmailPattern =
@@ -613,7 +707,9 @@ function showPayment() {
       return;
     }
 
-  } else {
+  }
+
+  else {
 
     if (!value) {
 
@@ -679,28 +775,26 @@ function copyUPI() {
 
     navigator.clipboard
       .writeText(UPI)
-      .then(
-        () => {
+      .then(() => {
 
-          alert(
-            "UPI ID copied: " +
-            UPI
-          );
+        alert(
+          "UPI ID copied: " +
+          UPI
+        );
 
-        }
-      )
-      .catch(
-        () => {
+      })
+      .catch(() => {
 
-          alert(
-            "UPI ID: " +
-            UPI
-          );
+        alert(
+          "UPI ID: " +
+          UPI
+        );
 
-        }
-      );
+      });
 
-  } else {
+  }
+
+  else {
 
     alert(
       "UPI ID: " +
@@ -723,15 +817,18 @@ async function submitOrder() {
       "utr"
     );
 
+
   const uidInput =
     document.getElementById(
       "uid"
     );
 
+
   const playerInput =
     document.getElementById(
       "player"
     );
+
 
   const status =
     document.getElementById(
@@ -815,7 +912,9 @@ async function submitOrder() {
     contact =
       player || null;
 
-  } else {
+  }
+
+  else {
 
     playerName =
       player || null;
@@ -859,12 +958,6 @@ async function submitOrder() {
 
 
   try {
-
-    /*
-      Important:
-      .select("id") returns the newly
-      created order ID.
-    */
 
     const {
       data,
@@ -915,7 +1008,10 @@ async function submitOrder() {
     }
 
 
-    if (!data || !data.id) {
+    if (
+      !data ||
+      !data.id
+    ) {
 
       throw new Error(
         "Order ID nahi mila."
@@ -928,18 +1024,12 @@ async function submitOrder() {
       data.id;
 
 
-    /*
-      Save order information
-      on this device.
-    */
+    /* SAVE LAST ORDER ID */
 
     localStorage.setItem(
       "ffm_last_order",
       JSON.stringify({
-        id:
-          orderId,
-        utr:
-          utr
+        id: orderId
       })
     );
 
@@ -952,17 +1042,20 @@ async function submitOrder() {
     }
 
 
+    /* SUCCESS MESSAGE */
+
     alert(
       "Order submitted successfully!\n\n" +
       "Order ID: #" +
-      orderId
+      orderId +
+      "\n\n" +
+      "Save this Order ID to track your order."
     );
 
 
     if (utrInput) {
 
-      utrInput.value =
-        "";
+      utrInput.value = "";
 
     }
 
@@ -970,17 +1063,46 @@ async function submitOrder() {
     closePayment();
 
 
-    /*
-      Show tracking immediately.
-    */
+    /* PUT ORDER ID INTO TRACKER */
 
-    await checkOrderStatus(
-      orderId,
-      utr
-    );
+    const trackInput =
+      document.getElementById(
+        "trackOrderId"
+      );
 
 
-  } catch (error) {
+    if (trackInput) {
+
+      trackInput.value =
+        orderId;
+
+    }
+
+
+    /* SHOW PENDING STATUS */
+
+    const tracker =
+      document.getElementById(
+        "orderTracker"
+      );
+
+
+    if (tracker) {
+
+      tracker.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+    }
+
+
+    await trackOrder();
+
+
+  }
+
+  catch (error) {
 
     console.error(
       "ORDER ERROR:",
@@ -1006,8 +1128,9 @@ async function submitOrder() {
       )
     );
 
+  }
 
-  } finally {
+  finally {
 
     if (submitButton) {
 
@@ -1025,7 +1148,7 @@ async function submitOrder() {
 
 
 /* ==========================================
-   TRACK ORDER UI
+   ORDER TRACKING UI
    ========================================== */
 
 function createTrackOrderUI() {
@@ -1076,51 +1199,47 @@ function createTrackOrderUI() {
 
   tracker.innerHTML = `
 
-    <div
-      style="
-        color:#ffb800;
-        font-size:12px;
-        font-weight:800;
-        letter-spacing:3px;
-        margin-bottom:8px;
-      ">
+    <div style="
+      color:#ffb800;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:3px;
+      margin-bottom:8px;
+    ">
       ORDER TRACKING
     </div>
 
 
-    <h2
-      style="
-        margin:0 0 8px;
-        color:#f5f7fb;
-        font-size:24px;
-      ">
+    <h2 style="
+      margin:0 0 8px;
+      color:#f5f7fb;
+      font-size:24px;
+    ">
       Track your order
     </h2>
 
 
-    <p
-      style="
-        margin:0 0 18px;
-        color:#8f9bad;
-        font-size:14px;
-        line-height:1.5;
-      ">
-      Enter your Order ID and UTR to check
+    <p style="
+      margin:0 0 18px;
+      color:#8f9bad;
+      font-size:14px;
+      line-height:1.5;
+    ">
+      Enter your Order ID to check
       the latest order status.
     </p>
 
 
-    <div
-      style="
-        display:grid;
-        gap:10px;
-      ">
+    <div style="
+      display:grid;
+      gap:10px;
+    ">
 
       <input
         id="trackOrderId"
         type="text"
         inputmode="numeric"
-        placeholder="Order ID"
+        placeholder="Enter Order ID"
         style="
           width:100%;
           min-height:48px;
@@ -1130,23 +1249,9 @@ function createTrackOrderUI() {
           border:1px solid #303b4c;
           border-radius:12px;
           outline:none;
-        ">
-
-
-      <input
-        id="trackUTR"
-        type="text"
-        placeholder="UTR / Transaction ID"
-        style="
-          width:100%;
-          min-height:48px;
-          padding:0 14px;
-          background:#080c12;
-          color:#f5f7fb;
-          border:1px solid #303b4c;
-          border-radius:12px;
-          outline:none;
-        ">
+          box-sizing:border-box;
+        "
+      >
 
 
       <button
@@ -1161,7 +1266,8 @@ function createTrackOrderUI() {
           border-radius:12px;
           font-weight:800;
           cursor:pointer;
-        ">
+        "
+      >
         Check Order Status
       </button>
 
@@ -1193,10 +1299,7 @@ function createTrackOrderUI() {
     );
 
 
-  /*
-    Automatically restore
-    last order on this device.
-  */
+  /* RESTORE LAST ORDER */
 
   try {
 
@@ -1216,26 +1319,29 @@ function createTrackOrderUI() {
 
       if (
         parsed &&
-        parsed.id &&
-        parsed.utr
+        parsed.id
       ) {
 
-        document.getElementById(
-          "trackOrderId"
-        ).value =
-          parsed.id;
+        const input =
+          document.getElementById(
+            "trackOrderId"
+          );
 
 
-        document.getElementById(
-          "trackUTR"
-        ).value =
-          parsed.utr;
+        if (input) {
+
+          input.value =
+            parsed.id;
+
+        }
 
       }
 
     }
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     console.error(
       "LOCAL STORAGE ERROR:",
@@ -1258,15 +1364,12 @@ async function trackOrder() {
       "trackOrderId"
     );
 
-  const utrInput =
-    document.getElementById(
-      "trackUTR"
-    );
 
   const result =
     document.getElementById(
       "orderResult"
     );
+
 
   const button =
     document.getElementById(
@@ -1280,15 +1383,10 @@ async function trackOrder() {
       : "";
 
 
-  const utr =
-    utrInput
-      ? utrInput.value.trim()
-      : "";
-
-
   if (!orderId) {
 
     result.innerHTML = `
+
       <div style="
         padding:14px;
         border-radius:12px;
@@ -1297,8 +1395,11 @@ async function trackOrder() {
         color:#ffcc4d;
         font-size:14px;
       ">
+
         Order ID enter karo.
+
       </div>
+
     `;
 
     return;
@@ -1306,19 +1407,25 @@ async function trackOrder() {
   }
 
 
-  if (!utr) {
+  if (
+    !/^[0-9]+$/.test(orderId)
+  ) {
 
     result.innerHTML = `
+
       <div style="
         padding:14px;
         border-radius:12px;
-        background:#241b08;
-        border:1px solid #5b4610;
-        color:#ffcc4d;
+        background:#241014;
+        border:1px solid #55202a;
+        color:#ff7b88;
         font-size:14px;
       ">
-        UTR / Transaction ID enter karo.
+
+        Valid Order ID enter karo.
+
       </div>
+
     `;
 
     return;
@@ -1329,18 +1436,23 @@ async function trackOrder() {
   button.disabled =
     true;
 
+
   button.textContent =
     "Checking...";
 
 
   result.innerHTML = `
+
     <div style="
       padding:14px;
       color:#8f9bad;
       font-size:14px;
     ">
+
       Checking order...
+
     </div>
+
   `;
 
 
@@ -1354,10 +1466,7 @@ async function trackOrder() {
         "get_order_status",
         {
           p_order_id:
-            Number(orderId),
-
-          p_utr:
-            utr
+            Number(orderId)
         }
       );
 
@@ -1380,6 +1489,7 @@ async function trackOrder() {
     ) {
 
       result.innerHTML = `
+
         <div style="
           padding:15px;
           border-radius:12px;
@@ -1389,9 +1499,12 @@ async function trackOrder() {
           font-size:14px;
           line-height:1.5;
         ">
-          Order nahi mila.<br>
-          Order ID aur UTR check karo.
+
+          Order not found.<br>
+          Please check your Order ID.
+
         </div>
+
       `;
 
       return;
@@ -1407,8 +1520,10 @@ async function trackOrder() {
       order
     );
 
+  }
 
-  } catch (error) {
+
+  catch (error) {
 
     console.error(
       "ORDER TRACKING ERROR:",
@@ -1417,6 +1532,7 @@ async function trackOrder() {
 
 
     result.innerHTML = `
+
       <div style="
         padding:15px;
         border-radius:12px;
@@ -1426,18 +1542,28 @@ async function trackOrder() {
         font-size:14px;
         line-height:1.5;
       ">
-        Status check nahi ho saka.<br><br>
+
+        Status check nahi ho saka.
+
+        <br><br>
+
         ${
           error.message ||
           "Please try again."
         }
+
       </div>
+
     `;
 
-  } finally {
+  }
+
+
+  finally {
 
     button.disabled =
       false;
+
 
     button.textContent =
       "Check Order Status";
@@ -1448,7 +1574,7 @@ async function trackOrder() {
 
 
 /* ==========================================
-   RENDER STATUS
+   RENDER ORDER STATUS
    ========================================== */
 
 function renderOrderStatus(
@@ -1471,21 +1597,28 @@ function renderOrderStatus(
   let title =
     "Payment Verification Pending";
 
+
   let message =
     "Your payment is waiting for manual verification.";
+
 
   let icon =
     "🟡";
 
+
   let border =
     "#5b4610";
+
 
   let background =
     "#241b08";
 
+
   let color =
     "#ffcc4d";
 
+
+  /* VERIFIED */
 
   if (
     status === "verified"
@@ -1494,23 +1627,30 @@ function renderOrderStatus(
     title =
       "Payment Verified";
 
+
     message =
       "Your payment has been verified. Your order is being processed.";
+
 
     icon =
       "🔵";
 
+
     border =
       "#173c5c";
 
+
     background =
       "#0c1c2a";
+
 
     color =
       "#66bfff";
 
   }
 
+
+  /* COMPLETED */
 
   if (
     status === "completed"
@@ -1519,23 +1659,30 @@ function renderOrderStatus(
     title =
       "Order Successful";
 
+
     message =
       "Your order has been completed successfully.";
+
 
     icon =
       "🟢";
 
+
     border =
       "#164b2b";
 
+
     background =
       "#0b2115";
+
 
     color =
       "#5ee28a";
 
   }
 
+
+  /* REJECTED */
 
   if (
     status === "rejected"
@@ -1544,17 +1691,22 @@ function renderOrderStatus(
     title =
       "Order Failed";
 
+
     message =
       "Your order/payment was rejected. Please contact the admin if you think this is a mistake.";
+
 
     icon =
       "🔴";
 
+
     border =
       "#55202a";
 
+
     background =
       "#241014";
+
 
     color =
       "#ff7b88";
@@ -1564,68 +1716,86 @@ function renderOrderStatus(
 
   result.innerHTML = `
 
-    <div
-      style="
-        padding:18px;
-        border-radius:15px;
-        background:${background};
-        border:1px solid ${border};
+    <div style="
+      padding:18px;
+      border-radius:15px;
+      background:${background};
+      border:1px solid ${border};
+    ">
+
+
+      <div style="
+        color:${color};
+        font-size:17px;
+        font-weight:850;
+        margin-bottom:7px;
       ">
 
-      <div
-        style="
-          color:${color};
-          font-size:17px;
-          font-weight:850;
-          margin-bottom:7px;
-        ">
-        ${icon} ${title}
+        ${icon}
+        ${title}
+
       </div>
 
 
-      <div
-        style="
-          color:#aeb8c9;
-          font-size:14px;
-          line-height:1.5;
-          margin-bottom:12px;
-        ">
+      <div style="
+        color:#aeb8c9;
+        font-size:14px;
+        line-height:1.5;
+        margin-bottom:12px;
+      ">
+
         ${message}
+
       </div>
 
 
-      <div
-        style="
-          color:#7f899a;
-          font-size:13px;
-          line-height:1.7;
-        ">
+      <div style="
+        color:#7f899a;
+        font-size:13px;
+        line-height:1.7;
+      ">
 
         Order:
-        <strong
-          style="color:#dce2ec;">
+
+        <strong style="
+          color:#dce2ec;
+        ">
+
           #${order.id}
+
         </strong>
+
 
         <br>
 
+
         Service:
-        <strong
-          style="color:#dce2ec;">
+
+        <strong style="
+          color:#dce2ec;
+        ">
+
           ${escapeHTML(
             order.service_name ||
             "-"
           )}
+
         </strong>
+
 
         <br>
 
+
         Amount:
-        <strong
-          style="color:#dce2ec;">
+
+        <strong style="
+          color:#dce2ec;
+        ">
+
           ₹${Number(
             order.amount || 0
           ).toLocaleString("en-IN")}
+
         </strong>
 
       </div>
@@ -1645,25 +1815,28 @@ function escapeHTML(
   value
 ) {
 
-  return String(
-    value
-  )
+  return String(value)
+
     .replace(
       /&/g,
       "&amp;"
     )
+
     .replace(
       /</g,
       "&lt;"
     )
+
     .replace(
       />/g,
       "&gt;"
     )
+
     .replace(
       /"/g,
       "&quot;"
     )
+
     .replace(
       /'/g,
       "&#039;"
