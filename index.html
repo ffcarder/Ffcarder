@@ -2,27 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>FFM Store — Free Fire Services</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header class="topbar">
-  <div class="brand">FFM <span>STORE</span></div>
-  <div class="tag">Premium Free Fire Services</div>
+  <div class="brand">
+    FFM <span>STORE</span>
+  </div>
+
+  <div class="tag">
+    Premium Free Fire Services
+  </div>
 </header>
+
 
 <main>
 
   <!-- HERO -->
   <section class="hero">
     <div>
-      <p class="eyebrow">FAST • SIMPLE • MANUAL VERIFIED</p>
+
+      <p class="eyebrow">
+        FAST • SIMPLE • MANUAL VERIFIED
+      </p>
 
       <h1>
-        Free Fire services,<br>
+        Free Fire services,
+        <br>
         <span>without the hassle.</span>
       </h1>
 
@@ -31,6 +43,7 @@
         pay by UPI and submit your UTR.
         Orders are processed after payment verification.
       </p>
+
     </div>
   </section>
 
@@ -38,14 +51,36 @@
   <!-- SERVICES -->
   <section id="services">
 
-    <nav id="catNav"
-         class="cat-nav"
-         aria-label="Service categories">
+    <div class="section-head">
+
+      <div>
+        <p class="eyebrow">STORE</p>
+        <h2>Services</h2>
+      </div>
+
+    </div>
+
+
+    <!-- CATEGORY BUTTONS -->
+    <nav
+      id="catNav"
+      class="cat-nav"
+      aria-label="Service categories">
     </nav>
 
-    <div id="serviceGrid" class="grid"></div>
 
-    <p id="tgContact" class="tg-contact"></p>
+    <!-- SERVICE CARDS -->
+    <div
+      id="serviceGrid"
+      class="grid">
+    </div>
+
+
+    <!-- TELEGRAM CONTACT -->
+    <p
+      id="tgContact"
+      class="tg-contact">
+    </p>
 
   </section>
 
@@ -53,39 +88,68 @@
 
 
 <!-- CHECKOUT MODAL -->
-<div id="checkout" class="modal hidden">
+<div
+  id="checkout"
+  class="modal hidden">
 
   <div class="modal-card">
 
-    <button class="close" onclick="closeCheckout()">×</button>
+    <button
+      class="close"
+      onclick="closeCheckout()">
+      ×
+    </button>
 
-    <p class="eyebrow">CHECKOUT</p>
+    <p class="eyebrow">
+      CHECKOUT
+    </p>
 
     <h2 id="checkoutTitle"></h2>
 
-    <div class="price" id="checkoutPrice"></div>
+    <div
+      class="price"
+      id="checkoutPrice">
+    </div>
 
+
+    <!-- UID / GMAIL -->
     <label>
-      <span id="uidLabelText">Free Fire UID</span>
+
+      <span id="uidLabelText">
+        Free Fire UID
+      </span>
+
       <input
         id="uid"
         inputmode="numeric"
+        type="text"
         placeholder="Enter UID"
       >
+
     </label>
 
+
+    <!-- PLAYER / CONTACT -->
     <label id="playerField">
+
       <span id="playerLabelText">
         Player name (optional)
       </span>
 
       <input
         id="player"
+        type="text"
         placeholder="Enter player name"
       >
+
     </label>
 
-    <p id="playerHelp" class="field-help"></p>
+
+    <p
+      id="playerHelp"
+      class="field-help">
+    </p>
+
 
     <button
       class="btn full"
@@ -94,29 +158,47 @@
     </button>
 
   </div>
+
 </div>
 
 
 <!-- PAYMENT MODAL -->
-<div id="payment" class="modal hidden">
+<div
+  id="payment"
+  class="modal hidden">
 
   <div class="modal-card payment-card">
 
-    <button class="close" onclick="closePayment()">×</button>
+    <button
+      class="close"
+      onclick="closePayment()">
+      ×
+    </button>
 
-    <p class="eyebrow">PAYMENT</p>
 
-    <h2>Pay via UPI</h2>
+    <p class="eyebrow">
+      PAYMENT
+    </p>
 
+    <h2>
+      Pay via UPI
+    </h2>
+
+
+    <!-- QR -->
     <div class="upi-box">
 
       <div class="qr-wrap">
         <img
           src="IMG_1954.jpeg"
-          alt="UPI QR code">
+          alt="UPI QR Code">
       </div>
 
-      <strong>ffcardergupta@fam</strong>
+
+      <strong>
+        ffcarderupta@fam
+      </strong>
+
 
       <button
         class="copy"
@@ -126,10 +208,14 @@
 
     </div>
 
+
     <p class="hint">
-      Scan the QR with any UPI app or pay to the UPI ID above.
+      Scan the QR with any UPI app
+      or pay to the UPI ID above.
     </p>
 
+
+    <!-- PAYMENT STEPS -->
     <div class="steps">
 
       <div>
@@ -144,18 +230,28 @@
 
       <div>
         <b>3</b>
-        Submit the UTR below. Your order stays pending until verified.
+        Submit the UTR below.
+        Your order stays pending until verified.
       </div>
 
     </div>
 
+
+    <!-- UTR -->
     <label>
-      UTR / Transaction ID
+
+      <span>
+        UTR / Transaction ID
+      </span>
 
       <input
         id="utr"
-        placeholder="Enter UTR after payment">
+        type="text"
+        placeholder="Enter UTR after payment"
+      >
+
     </label>
+
 
     <button
       class="btn full"
@@ -163,9 +259,14 @@
       Submit Payment Details
     </button>
 
-    <p id="status" class="status"></p>
+
+    <p
+      id="status"
+      class="status">
+    </p>
 
   </div>
+
 </div>
 
 
@@ -182,6 +283,10 @@
 </footer>
 
 
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- YOUR JAVASCRIPT -->
 <script src="app.js"></script>
 
 </body>
