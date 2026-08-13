@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>FFM Store — Admin</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #05070b;
+      color: #f5f7fb;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* LOGIN */
+
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 430px;
+      background: #0b1017;
+      border: 1px solid #273140;
+      border-radius: 24px;
+      padding: 30px;
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .logo span {
+      color: #ffb800;
+    }
+
+    .login-sub {
+      color: #8f9bad;
+      margin: 0 0 28px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    label span {
+      display: block;
+      margin-bottom: 8px;
+      color: #aab4c4;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #303b4c;
+      background: #080c12;
+      color: #f5f7fb;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #ffb800;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 50px;
+      border: 0;
+      border-radius: 13px;
+      background: #ffb800;
+      color: #05070b;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .error {
+      margin-top: 15px;
+      color: #ff6b6b;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    /* ADMIN */
+
+    .admin {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(5, 7, 11, .94);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid #202630;
+    }
+
+    .topbar-inner {
+      max-width: 1400px;
+      margin: auto;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .admin-title {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .admin-title span {
+      color: #ffb800;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .secondary-btn {
+      min-height: 42px;
+      padding: 0 15px;
+      border-radius: 10px;
+      border: 1px solid #303b4c;
+      background: #0b1017;
+      color: #f5f7fb;
+      cursor: pointer;
+    }
+
+    .secondary-btn:hover {
+      border-color: #ffb800;
+    }
+
+    .content {
+      max-width: 1400px;
+      margin: auto;
+      padding: 25px 22px 60px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      background: #0b1017;
+      border: 1px solid #273140;
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: #8f9bad;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .orders-box {
+      background: #0b1017;
+      border: 1px solid #273140;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .orders-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid #273140;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .orders-head h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .orders-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1050px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 15px 14px;
+      text-align: left;
+      border-bottom: 1px solid #202630;
+      vertical-align: top;
+    }
+
+    th {
+      color: #8f9bad;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      white-space: nowrap;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .muted {
+      color: #8f9bad;
+    }
+
+    .utr {
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    .status-select {
+      min-width: 140px;
+      min-height: 40px;
+      padding: 7px 10px;
+      border-radius: 9px;
+    }
+
+    .empty {
+      padding: 45px 20px;
+      text-align: center;
+      color: #8f9bad;
+    }
+
+    .loading {
+      padding: 45px 20px;
+      text-align: center;
+      color: #ffb800;
+    }
+
+    .message {
+      margin-bottom: 18px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      background: #111822;
+      border: 1px solid #273140;
+      color: #aeb8c9;
+    }
+
+    @media (max-width: 800px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .topbar-inner {
+        padding: 15px;
+      }
+
+      .content {
+        padding: 18px 12px 50px;
+      }
+
+      .admin-title {
+        font-size: 20px;
+      }
+
+      .secondary-btn {
+        padding: 0 11px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 23px;
+      }
+
+      .stats {
+        gap: 9px;
+      }
+
+      .stat {
+        padding: 15px;
+      }
+
+      .stat-value {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+  <section id="loginPage" class="login-page">
+
+    <div class="login-box">
+
+      <div class="logo">
+        FFM <span>ADMIN</span>
+      </div>
+
+      <p class="login-sub">
+        Sign in to manage store orders.
+      </p>
+
+      <form id="loginForm">
+
+        <label>
+          <span>Email</span>
+
+          <input
+            id="email"
+            type="email"
+            autocomplete="email"
+            placeholder="Admin email"
+            required
+          >
+        </label>
+
+        <label>
+          <span>Password</span>
+
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Password"
+            required
+          >
+        </label>
+
+        <button
+          id="loginButton"
+          class="btn"
+          type="submit">
+          Login
+        </button>
+
+      </form>
+
+      <div
+        id="loginError"
+        class="error">
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ADMIN PANEL -->
+  <section
+    id="adminPage"
+    class="admin hidden">
+
+    <header class="topbar">
+
+      <div class="topbar-inner">
+
+        <div class="admin-title">
+          FFM <span>ADMIN</span>
+        </div>
+
+        <div class="top-actions">
+
+          <button
+            id="refreshButton"
+            class="secondary-btn">
+            Refresh
+          </button>
+
+          <button
+            id="logoutButton"
+            class="secondary-btn">
+            Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <main class="content">
+
+      <div
+        id="adminMessage"
+        class="message hidden">
+      </div>
+
+
+      <!-- STATS -->
+
+      <section class="stats">
+
+        <div class="stat">
+          <div class="stat-label">
+            Total Orders
+          </div>
+
+          <div
+            id="totalOrders"
+            class="stat-value">
+            0
+          </div>
+        </div>
+
+
+        <div class="stat">
+          <div class="stat-label">
+            Pending
+          </div>
+
+          <div
+            id="pendingOrders"
+            class="stat-value">
+            0
+          </div>
+        </div>
+
+
+        <div class="stat">
+          <div class="stat-label">
+            Completed
+          </div>
+
+          <div
+            id="completedOrders"
+            class="stat-value">
+            0
+          </div>
+        </div>
+
+
+        <div class="stat">
+          <div class="stat-label">
+            Total Amount
+          </div>
+
+          <div
+            id="totalAmount"
+            class="stat-value">
+            ₹0
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ORDERS -->
+
+      <section class="orders-box">
+
+        <div class="orders-head">
+
+          <h2>
+            Orders
+          </h2>
+
+          <span
+            id="lastUpdated"
+            class="muted">
+          </span>
+
+        </div>
+
+
+        <div class="orders-scroll">
+
+          <div
+            id="ordersLoading"
+            class="loading">
+            Loading orders...
+          </div>
+
+
+          <div
+            id="ordersEmpty"
+            class="empty hidden">
+            No orders found.
+          </div>
+
+
+          <table
+            id="ordersTable"
+            class="hidden">
+
+            <thead>
+
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Service</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>UID / Gmail</th>
+                <th>Player / Contact</th>
+                <th>UTR</th>
+                <th>Status</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="ordersBody">
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </section>
+
+
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="admin.js"></script>
+
+</body>
+</html>
