@@ -63,7 +63,6 @@ const services = [
     price: 1000
   },
 
-
   {
     cat: "craftland",
     name: "Craftland Followers",
@@ -105,7 +104,6 @@ const services = [
     priceText: "From ₹20"
   },
 
-
   {
     cat: "guild",
     name: "Guild Level 7",
@@ -122,7 +120,6 @@ const services = [
     price: 1400
   },
 
-
   {
     cat: "diamonds",
     name: "4,000 Diamonds",
@@ -138,7 +135,6 @@ const services = [
     meta: "Manual delivery",
     price: 2000
   },
-
 
   {
     cat: "redeem",
@@ -183,10 +179,10 @@ function priceLabel(service) {
     return service.priceText;
   }
 
-  if (service.price) {
+  if (service.price !== undefined && service.price !== null) {
     return (
       "₹" +
-      service.price.toLocaleString("en-IN")
+      Number(service.price).toLocaleString("en-IN")
     );
   }
 
@@ -218,7 +214,7 @@ function renderNav() {
           data-cat="${category.id}"
           onclick="selectCategory('${category.id}')">
 
-          ${category.name}
+          ${escapeHTML(category.name)}
 
         </button>
 
@@ -269,18 +265,18 @@ function renderCards() {
           <article class="card">
 
             <h3>
-              ${service.name}
+              ${escapeHTML(service.name)}
             </h3>
 
             <p>
-              ${service.desc}
+              ${escapeHTML(service.desc)}
             </p>
 
             ${
               service.meta
                 ? `
                   <p class="meta">
-                    ${service.meta}
+                    ${escapeHTML(service.meta)}
                   </p>
                 `
                 : ""
@@ -461,29 +457,32 @@ function openCheckout(index) {
 
   if (isUnsubscribe(selected)) {
 
-    labelText.textContent =
-      "Gmail address";
+    if (labelText) {
+      labelText.textContent =
+        "Gmail address";
+    }
 
 
-    idInput.value = "";
+    if (idInput) {
 
+      idInput.value = "";
 
-    idInput.setAttribute(
-      "inputmode",
-      "email"
-    );
+      idInput.setAttribute(
+        "inputmode",
+        "email"
+      );
 
+      idInput.setAttribute(
+        "type",
+        "email"
+      );
 
-    idInput.setAttribute(
-      "type",
-      "email"
-    );
+      idInput.setAttribute(
+        "placeholder",
+        "yourname@gmail.com"
+      );
 
-
-    idInput.setAttribute(
-      "placeholder",
-      "yourname@gmail.com"
-    );
+    }
 
 
     if (playerField) {
@@ -495,29 +494,32 @@ function openCheckout(index) {
 
   } else {
 
-    labelText.textContent =
-      "Free Fire UID";
+    if (labelText) {
+      labelText.textContent =
+        "Free Fire UID";
+    }
 
 
-    idInput.value = "";
+    if (idInput) {
 
+      idInput.value = "";
 
-    idInput.setAttribute(
-      "inputmode",
-      "numeric"
-    );
+      idInput.setAttribute(
+        "inputmode",
+        "numeric"
+      );
 
+      idInput.setAttribute(
+        "type",
+        "text"
+      );
 
-    idInput.setAttribute(
-      "type",
-      "text"
-    );
+      idInput.setAttribute(
+        "placeholder",
+        "Enter UID"
+      );
 
-
-    idInput.setAttribute(
-      "placeholder",
-      "Enter UID"
-    );
+    }
 
 
     if (playerField) {
@@ -541,30 +543,40 @@ function openCheckout(index) {
     selected.cat === "diamonds"
   ) {
 
-    playerLabelText.textContent =
-      "Contact Number";
+    if (playerLabelText) {
+
+      playerLabelText.textContent =
+        "Contact Number";
+
+    }
 
 
-    playerInput.setAttribute(
-      "type",
-      "tel"
-    );
+    if (playerInput) {
+
+      playerInput.setAttribute(
+        "type",
+        "tel"
+      );
+
+      playerInput.setAttribute(
+        "inputmode",
+        "tel"
+      );
+
+      playerInput.setAttribute(
+        "placeholder",
+        "Enter your WhatsApp/Telegram number"
+      );
+
+    }
 
 
-    playerInput.setAttribute(
-      "inputmode",
-      "tel"
-    );
+    if (playerHelp) {
 
+      playerHelp.textContent =
+        "Add your contact number so I can contact you about your order.";
 
-    playerInput.setAttribute(
-      "placeholder",
-      "Enter your WhatsApp/Telegram number"
-    );
-
-
-    playerHelp.textContent =
-      "Add your contact number so I can contact you about your order.";
+    }
 
   }
 
@@ -572,81 +584,114 @@ function openCheckout(index) {
     selected.cat === "redeem"
   ) {
 
-    playerLabelText.textContent =
-      "Email / Contact Number";
+    if (playerLabelText) {
+
+      playerLabelText.textContent =
+        "Email / Contact Number";
+
+    }
 
 
-    playerInput.setAttribute(
-      "type",
-      "text"
-    );
+    if (playerInput) {
+
+      playerInput.setAttribute(
+        "type",
+        "text"
+      );
+
+      playerInput.setAttribute(
+        "inputmode",
+        "text"
+      );
+
+      playerInput.setAttribute(
+        "placeholder",
+        "Enter email or contact number"
+      );
+
+    }
 
 
-    playerInput.setAttribute(
-      "inputmode",
-      "text"
-    );
+    if (playerHelp) {
 
+      playerHelp.textContent =
+        "Add your contact details for code delivery.";
 
-    playerInput.setAttribute(
-      "placeholder",
-      "Enter email or contact number"
-    );
-
-
-    playerHelp.textContent =
-      "Add your contact details for code delivery.";
+    }
 
   }
 
   else {
 
-    playerLabelText.textContent =
-      "Player name (optional)";
+    if (playerLabelText) {
+
+      playerLabelText.textContent =
+        "Player name (optional)";
+
+    }
 
 
-    playerInput.setAttribute(
-      "type",
-      "text"
-    );
+    if (playerInput) {
+
+      playerInput.setAttribute(
+        "type",
+        "text"
+      );
+
+      playerInput.setAttribute(
+        "inputmode",
+        "text"
+      );
+
+      playerInput.setAttribute(
+        "placeholder",
+        "Enter player name"
+      );
+
+    }
 
 
-    playerInput.setAttribute(
-      "inputmode",
-      "text"
-    );
+    if (playerHelp) {
 
+      playerHelp.textContent =
+        "";
 
-    playerInput.setAttribute(
-      "placeholder",
-      "Enter player name"
-    );
-
-
-    playerHelp.textContent =
-      "";
+    }
 
   }
 
 
-  document
-    .getElementById(
+  const checkout =
+    document.getElementById(
       "checkout"
-    )
-    .classList
-    .remove("hidden");
+    );
+
+
+  if (checkout) {
+
+    checkout.classList.remove(
+      "hidden"
+    );
+
+  }
 
 }
 
 
 function closeCheckout() {
 
-  document
-    .getElementById(
+  const checkout =
+    document.getElementById(
       "checkout"
-    )
-    .classList
-    .add("hidden");
+    );
+
+  if (checkout) {
+
+    checkout.classList.add(
+      "hidden"
+    );
+
+  }
 
 }
 
@@ -667,13 +712,16 @@ function showPayment() {
   }
 
 
+  const uidElement =
+    document.getElementById(
+      "uid"
+    );
+
+
   const value =
-    document
-      .getElementById(
-        "uid"
-      )
-      .value
-      .trim();
+    uidElement
+      ? uidElement.value.trim()
+      : "";
 
 
   if (
@@ -922,60 +970,67 @@ async function submitOrder() {
   }
 
 
-  const order = {
+  /*
+    IMPORTANT:
 
-    service_name:
-      selected.name,
+    Do NOT insert directly into orders.
 
-    category:
-      selected.cat,
+    The database function create_order()
+    is SECURITY DEFINER and handles the insert.
 
-    amount:
-      selected.price,
+    Parameters:
 
-    uid:
-      uid || null,
-
-    player_name:
-      playerName,
-
-    contact:
-      contact,
-
-    utr:
-      utr,
-
-    status:
-      "pending"
-
-  };
-
-
-  console.log(
-    "ORDER PAYLOAD:",
-    order
-  );
-
+    p_service_name
+    p_category
+    p_amount
+    p_uid
+    p_player_name
+    p_contact
+    p_utr
+  */
 
   try {
+
+    console.log(
+      "Creating order through RPC..."
+    );
+
 
     const {
       data,
       error
     } =
-      await supabaseClient
-        .from("orders")
-        .insert([
-          order
-        ])
-        .select("id")
-        .single();
+      await supabaseClient.rpc(
+        "create_order",
+        {
+          p_service_name:
+            selected.name,
+
+          p_category:
+            selected.cat,
+
+          p_amount:
+            selected.price,
+
+          p_uid:
+            uid || null,
+
+          p_player_name:
+            playerName,
+
+          p_contact:
+            contact,
+
+          p_utr:
+            utr
+        }
+      );
 
 
     if (error) {
 
       console.error(
-        "SUPABASE ERROR:",
+        "CREATE ORDER RPC ERROR:",
         error
       );
 
@@ -1008,9 +1063,18 @@ async function submitOrder() {
     }
 
 
+    /*
+      create_order() RETURNS bigint
+
+      So data itself is the Order ID.
+
+      Old code was incorrectly expecting:
+      data.id
+    */
+
     if (
-      !data ||
-      !data.id
+      data === null ||
+      data === undefined
     ) {
 
       throw new Error(
@@ -1021,7 +1085,24 @@ async function submitOrder() {
 
 
     const orderId =
-      data.id;
+      Number(data);
+
+
+    if (
+      !Number.isFinite(orderId)
+    ) {
+
+      throw new Error(
+        "Invalid Order ID returned by server."
+      );
+
+    }
+
+
+    console.log(
+      "ORDER CREATED:",
+      orderId
+    );
 
 
     /* SAVE LAST ORDER ID */
@@ -1097,8 +1178,19 @@ async function submitOrder() {
     }
 
 
-    await trackOrder();
+    /*
+      Small delay so the database
+      has finished the insert before
+      tracking the order.
+    */
 
+    await new Promise(
+      resolve =>
+        setTimeout(resolve, 300)
+    );
+
+
+    await trackOrder();
 
   }
 
@@ -1113,7 +1205,7 @@ async function submitOrder() {
     if (status) {
 
       status.textContent =
-        "Network error. Please try again.";
+        "Order submit nahi hua.";
 
     }
 
@@ -1289,14 +1381,20 @@ function createTrackOrderUI() {
   );
 
 
-  document
-    .getElementById(
+  const trackButton =
+    document.getElementById(
       "trackButton"
-    )
-    .addEventListener(
+    );
+
+
+  if (trackButton) {
+
+    trackButton.addEventListener(
       "click",
       trackOrder
     );
+
+  }
 
 
   /* RESTORE LAST ORDER */
@@ -1377,6 +1475,11 @@ async function trackOrder() {
     );
 
 
+  if (!result) {
+    return;
+  }
+
+
   const orderId =
     idInput
       ? idInput.value.trim()
@@ -1433,12 +1536,15 @@ async function trackOrder() {
   }
 
 
-  button.disabled =
-    true;
+  if (button) {
 
+    button.disabled =
+      true;
 
-  button.textContent =
-    "Checking...";
+    button.textContent =
+      "Checking...";
+
+  }
 
 
   result.innerHTML = `
@@ -1548,8 +1654,12 @@ async function trackOrder() {
         <br><br>
 
         ${
-          error.message ||
-          "Please try again."
+          escapeHTML(
+            error &&
+            error.message
+              ? error.message
+              : "Please try again."
+          )
         }
 
       </div>
@@ -1561,12 +1671,15 @@ async function trackOrder() {
 
   finally {
 
-    button.disabled =
-      false;
+    if (button) {
 
+      button.disabled =
+        false;
 
-    button.textContent =
-      "Check Order Status";
+      button.textContent =
+        "Check Order Status";
+
+    }
 
   }
 
@@ -1585,6 +1698,11 @@ function renderOrderStatus(
     document.getElementById(
       "orderResult"
     );
+
+
+  if (!result) {
+    return;
+  }
 
 
   const status =
@@ -1761,7 +1879,7 @@ function renderOrderStatus(
           color:#dce2ec;
         ">
 
-          #${order.id}
+          #${escapeHTML(order.id)}
 
         </strong>
 
