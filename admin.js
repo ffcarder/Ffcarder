@@ -211,6 +211,7 @@ async function checkAdmin() {
 
     await loadOrders();
 
+    await loadServices();
 
   } catch (error) {
 
@@ -718,7 +719,7 @@ function renderOrders(
 
 
 /* ==========================================
-   UPDATE STATUS
+   UPDATE ORDER STATUS
    ========================================== */
 
 async function updateOrderStatus(
@@ -803,6 +804,585 @@ async function updateOrderStatus(
 
 
 /* ==========================================
+   SERVICE STOCK MANAGEMENT
+   ========================================== */
+
+const serviceKeys = {
+
+  "Single Unsubscribe":
+    "single_unsubscribe",
+
+  "Double Unsubscribe":
+    "double_unsubscribe",
+
+  "Craftland Followers":
+    "craftland_followers",
+
+  "Craftland Followers (Fast Plan)":
+    "craftland_followers_fast",
+
+  "Craftland Map Likes":
+    "craftland_map_likes",
+
+  "Craftland Map Stars":
+    "craftland_map_stars",
+
+  "Craftland Level Up":
+    "craftland_level_up",
+
+  "Guild Level 7":
+    "guild_level_7",
+
+  "Guild Region Top 15":
+    "guild_region_top_15",
+
+  "4,000 Diamonds":
+    "diamonds_4000",
+
+  "10,000 Diamonds":
+    "diamonds_10000",
+
+  "₹100 Play Store Redeem Code":
+    "redeem_100",
+
+  "₹500 Play Store Redeem Code":
+    "redeem_500",
+
+  "₹1,000 Play Store Redeem Code":
+    "redeem_1000"
+
+};
+
+
+async function loadServices() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("services")
+        .select(
+          "id, service_key, name, in_stock"
+        )
+        .order(
+          "id",
+          {
+            ascending: true
+          }
+        );
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    console.log(
+      "SERVICES:",
+      data
+    );
+
+
+    renderStockManager(
+      Array.isArray(data)
+        ? data
+        : []
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "LOAD SERVICES ERROR:",
+      error
+    );
+
+
+    showMessage(
+      "Services load nahi hui: " +
+      (
+        error.message ||
+        "Unknown error"
+      )
+    );
+
+  }
+
+}
+
+
+/* ==========================================
+   CREATE STOCK MANAGER
+   ========================================== */
+
+function renderStockManager(
+  services
+) {
+
+  let box =
+    document.getElementById(
+      "stockManager"
+    );
+
+
+  if (!box) {
+
+    box =
+      document.createElement(
+        "section"
+      );
+
+    box.id =
+      "stockManager";
+
+
+    box.style.cssText = `
+      margin-bottom:25px;
+      background:#0b1017;
+      border:1px solid #273140;
+      border-radius:20px;
+      overflow:hidden;
+    `;
+
+
+    const content =
+      document.querySelector(
+        ".content"
+      );
+
+
+    if (!content) {
+      return;
+    }
+
+
+    const stats =
+      document.querySelector(
+        ".stats"
+      );
+
+
+    if (
+      stats &&
+      stats.nextSibling
+    ) {
+
+      content.insertBefore(
+        box,
+        stats.nextSibling
+      );
+
+    } else {
+
+      content.prepend(
+        box
+      );
+
+    }
+
+  }
+
+
+  box.innerHTML = `
+
+    <div style="
+      padding:18px 20px;
+      border-bottom:1px solid #273140;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      flex-wrap:wrap;
+    ">
+
+      <div>
+
+        <h2 style="
+          margin:0 0 5px;
+          font-size:20px;
+          color:#f5f7fb;
+        ">
+          Service Stock
+        </h2>
+
+        <p style="
+          margin:0;
+          color:#8f9bad;
+          font-size:13px;
+        ">
+          Control which services customers can order.
+        </p>
+
+      </div>
+
+      <div style="
+        color:#8f9bad;
+        font-size:13px;
+      ">
+        ${services.length} services
+      </div>
+
+    </div>
+
+
+    <div
+      id="stockList"
+      style="
+        display:grid;
+        gap:1px;
+        background:#202630;
+      ">
+    </div>
+
+  `;
+
+
+  const list =
+    document.getElementById(
+      "stockList"
+    );
+
+
+  services.forEach(
+    service => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.style.cssText = `
+        background:#0b1017;
+        padding:15px 20px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:15px;
+      `;
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+
+      info.style.cssText = `
+        min-width:0;
+        flex:1;
+      `;
+
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+
+      name.textContent =
+        service.name;
+
+
+      name.style.cssText = `
+        color:#f5f7fb;
+        font-size:14px;
+        font-weight:750;
+        margin-bottom:5px;
+      `;
+
+
+      const key =
+        document.createElement(
+          "div"
+        );
+
+
+      key.textContent =
+        service.service_key;
+
+
+      key.style.cssText = `
+        color:#687386;
+        font-size:11px;
+        font-family:monospace;
+        word-break:break-all;
+      `;
+
+
+      info.appendChild(
+        name
+      );
+
+      info.appendChild(
+        key
+      );
+
+
+      const controls =
+        document.createElement(
+          "div"
+        );
+
+
+      controls.style.cssText = `
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-shrink:0;
+      `;
+
+
+      const badge =
+        document.createElement(
+          "span"
+        );
+
+
+      updateStockBadge(
+        badge,
+        service.in_stock
+      );
+
+
+      const toggle =
+        document.createElement(
+          "button"
+        );
+
+
+      toggle.type =
+        "button";
+
+
+      toggle.textContent =
+        service.in_stock
+          ? "Out of Stock"
+          : "Mark In Stock";
+
+
+      toggle.style.cssText = `
+        min-height:40px;
+        padding:0 13px;
+        border-radius:10px;
+        border:1px solid #303b4c;
+        background:#080c12;
+        color:#f5f7fb;
+        cursor:pointer;
+        font-weight:750;
+        font-size:13px;
+      `;
+
+
+      toggle.addEventListener(
+        "click",
+        function () {
+
+          updateServiceStock(
+            service.id,
+            !service.in_stock,
+            toggle,
+            badge
+          );
+
+        }
+      );
+
+
+      controls.appendChild(
+        badge
+      );
+
+      controls.appendChild(
+        toggle
+      );
+
+
+      row.appendChild(
+        info
+      );
+
+      row.appendChild(
+        controls
+      );
+
+
+      list.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* ==========================================
+   STOCK BADGE
+   ========================================== */
+
+function updateStockBadge(
+  badge,
+  inStock
+) {
+
+  badge.textContent =
+    inStock
+      ? "IN STOCK"
+      : "OUT OF STOCK";
+
+
+  badge.style.cssText =
+    inStock
+      ? `
+        display:inline-flex;
+        align-items:center;
+        min-height:30px;
+        padding:0 9px;
+        border-radius:8px;
+        background:#0b2115;
+        border:1px solid #164b2b;
+        color:#5ee28a;
+        font-size:11px;
+        font-weight:850;
+        white-space:nowrap;
+      `
+      : `
+        display:inline-flex;
+        align-items:center;
+        min-height:30px;
+        padding:0 9px;
+        border-radius:8px;
+        background:#241014;
+        border:1px solid #55202a;
+        color:#ff7b88;
+        font-size:11px;
+        font-weight:850;
+        white-space:nowrap;
+      `;
+
+}
+
+
+/* ==========================================
+   UPDATE SERVICE STOCK
+   ========================================== */
+
+async function updateServiceStock(
+  serviceId,
+  newStock,
+  button,
+  badge
+) {
+
+  button.disabled =
+    true;
+
+
+  const originalText =
+    button.textContent;
+
+
+  button.textContent =
+    "Updating...";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("services")
+        .update({
+          in_stock: newStock
+        })
+        .eq(
+          "id",
+          serviceId
+        )
+        .select(
+          "id, service_key, name, in_stock"
+        )
+        .single();
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    if (!data) {
+
+      throw new Error(
+        "Service update nahi hui."
+      );
+
+    }
+
+
+    updateStockBadge(
+      badge,
+      data.in_stock
+    );
+
+
+    button.textContent =
+      data.in_stock
+        ? "Out of Stock"
+        : "Mark In Stock";
+
+
+    showMessage(
+      data.name +
+      " → " +
+      (
+        data.in_stock
+          ? "In Stock"
+          : "Out of Stock"
+      )
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "STOCK UPDATE ERROR:",
+      error
+    );
+
+
+    alert(
+      "Stock update nahi hua.\n\n" +
+      (
+        error.message ||
+        "Unknown error"
+      )
+    );
+
+
+    button.textContent =
+      originalText;
+
+  } finally {
+
+    button.disabled =
+      false;
+
+  }
+
+}
+
+
+/* ==========================================
    LOGOUT
    ========================================== */
 
@@ -837,6 +1417,8 @@ document
     async function () {
 
       await loadOrders();
+
+      await loadServices();
 
     }
   );
