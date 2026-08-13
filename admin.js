@@ -1,5 +1,5 @@
 const SUPABASE_URL =
-  "https://wlldnjdgnqnnwtdakkbg.supabase.co";
+  "https://wlldnjdgngnnwtdakkbg.supabase.co";
 
 const SUPABASE_KEY =
   "sb_publishable_LRDs-toBVkcc0tfhts_stA_mirTYqPz";
@@ -66,6 +66,7 @@ loginForm.addEventListener(
         .value;
 
     if (!email || !password) {
+
       loginError.textContent =
         "Email aur password dono enter karo.";
 
@@ -77,20 +78,25 @@ loginForm.addEventListener(
 
     try {
 
-      const { data, error } =
+      const {
+        data,
+        error
+      } =
         await supabaseClient.auth.signInWithPassword({
-          email,
-          password
+          email: email,
+          password: password
         });
 
       if (error) {
         throw error;
       }
 
-      if (!data.session) {
+      if (!data || !data.session) {
+
         throw new Error(
           "Login session create nahi hui."
         );
+
       }
 
       await checkAdmin();
@@ -123,35 +129,93 @@ loginForm.addEventListener(
 
 async function checkAdmin() {
 
-  const {
-    data: {
-      user
+  try {
+
+    const {
+      data: {
+        user
+      }
+    } =
+      await supabaseClient.auth.getUser();
+
+    if (!user) {
+
+      showLogin();
+
+      return;
     }
-  } =
-    await supabaseClient.auth.getUser();
 
-  if (!user) {
 
-    showLogin();
+    console.log(
+      "LOGGED IN USER:",
+      user.id
+    );
 
-    return;
 
-  }
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("admin_users")
+        .select("user_id")
+        .eq(
+          "user_id",
+          user.id
+        )
+        .maybeSingle();
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("admin_users")
-      .select("user_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
 
-  if (error) {
+    if (error) {
+
+      console.error(
+        "ADMIN CHECK ERROR:",
+        error
+      );
+
+      await supabaseClient.auth.signOut();
+
+      showLogin();
+
+      loginError.textContent =
+        "Admin verification failed: " +
+        (
+          error.message ||
+          "Unknown error"
+        );
+
+      return;
+    }
+
+
+    if (!data) {
+
+      await supabaseClient.auth.signOut();
+
+      showLogin();
+
+      loginError.textContent =
+        "Access denied. Ye account admin nahi hai.";
+
+      return;
+    }
+
+
+    console.log(
+      "ADMIN VERIFIED:",
+      data
+    );
+
+
+    showAdmin();
+
+    await loadOrders();
+
+
+  } catch (error) {
 
     console.error(
-      "ADMIN CHECK ERROR:",
+      "CHECK ADMIN ERROR:",
       error
     );
 
@@ -160,28 +224,10 @@ async function checkAdmin() {
     showLogin();
 
     loginError.textContent =
+      error.message ||
       "Admin verification failed.";
 
-    return;
-
   }
-
-  if (!data) {
-
-    await supabaseClient.auth.signOut();
-
-    showLogin();
-
-    loginError.textContent =
-      "Access denied. Ye account admin nahi hai.";
-
-    return;
-
-  }
-
-  showAdmin();
-
-  loadOrders();
 
 }
 
@@ -236,6 +282,7 @@ async function loadOrders() {
 
   ordersBody.innerHTML = "";
 
+
   try {
 
     const {
@@ -252,18 +299,34 @@ async function loadOrders() {
           }
         );
 
+
     if (error) {
+
       throw error;
+
     }
+
 
     const orders =
       Array.isArray(data)
         ? data
         : [];
 
-    updateStats(orders);
 
-    if (orders.length === 0) {
+    console.log(
+      "ORDERS:",
+      orders
+    );
+
+
+    updateStats(
+      orders
+    );
+
+
+    if (
+      orders.length === 0
+    ) {
 
       ordersEmpty.classList.remove(
         "hidden"
@@ -271,7 +334,9 @@ async function loadOrders() {
 
     } else {
 
-      renderOrders(orders);
+      renderOrders(
+        orders
+      );
 
       ordersTable.classList.remove(
         "hidden"
@@ -279,13 +344,23 @@ async function loadOrders() {
 
     }
 
-    document.getElementById(
-      "lastUpdated"
-    ).textContent =
-      "Updated " +
-      new Date().toLocaleTimeString(
-        "en-IN"
+
+    const lastUpdated =
+      document.getElementById(
+        "lastUpdated"
       );
+
+
+    if (lastUpdated) {
+
+      lastUpdated.textContent =
+        "Updated " +
+        new Date().toLocaleTimeString(
+          "en-IN"
+        );
+
+    }
+
 
   } catch (error) {
 
@@ -294,10 +369,20 @@ async function loadOrders() {
       error
     );
 
+
     showMessage(
       "Orders load nahi hue: " +
-      (error.message || "Unknown error")
+      (
+        error.message ||
+        "Unknown error"
+      )
     );
+
+
+    ordersEmpty.classList.remove(
+      "hidden"
+    );
+
 
   } finally {
 
@@ -314,10 +399,13 @@ async function loadOrders() {
    STATS
    ========================================== */
 
-function updateStats(orders) {
+function updateStats(
+  orders
+) {
 
   const total =
     orders.length;
+
 
   const pending =
     orders.filter(
@@ -325,34 +413,45 @@ function updateStats(orders) {
         order.status === "pending"
     ).length;
 
+
   const completed =
     orders.filter(
       order =>
         order.status === "completed"
     ).length;
 
+
   const amount =
     orders.reduce(
-      (sum, order) =>
+      (
+        sum,
+        order
+      ) =>
         sum +
-        Number(order.amount || 0),
+        Number(
+          order.amount || 0
+        ),
       0
     );
+
 
   document.getElementById(
     "totalOrders"
   ).textContent =
     total;
 
+
   document.getElementById(
     "pendingOrders"
   ).textContent =
     pending;
 
+
   document.getElementById(
     "completedOrders"
   ).textContent =
     completed;
+
 
   document.getElementById(
     "totalAmount"
@@ -369,9 +468,12 @@ function updateStats(orders) {
    RENDER ORDERS
    ========================================== */
 
-function renderOrders(orders) {
+function renderOrders(
+  orders
+) {
 
   ordersBody.innerHTML = "";
+
 
   orders.forEach(
     order => {
@@ -444,7 +546,7 @@ function renderOrders(orders) {
         );
 
 
-      /* UID */
+      /* UID / GMAIL */
 
       const uid =
         document.createElement(
@@ -489,6 +591,7 @@ function renderOrders(orders) {
           "td"
         );
 
+
       const select =
         document.createElement(
           "select"
@@ -497,12 +600,14 @@ function renderOrders(orders) {
       select.className =
         "status-select";
 
+
       const statuses = [
         "pending",
         "verified",
         "completed",
         "rejected"
       ];
+
 
       statuses.forEach(
         status => {
@@ -521,13 +626,17 @@ function renderOrders(orders) {
               .toUpperCase() +
             status.slice(1);
 
+
           if (
             order.status ===
             status
           ) {
+
             option.selected =
               true;
+
           }
+
 
           select.appendChild(
             option
@@ -535,6 +644,12 @@ function renderOrders(orders) {
 
         }
       );
+
+
+      select.dataset.oldValue =
+        order.status ||
+        "pending";
+
 
       select.addEventListener(
         "change",
@@ -549,20 +664,48 @@ function renderOrders(orders) {
         }
       );
 
+
       statusCell.appendChild(
         select
       );
 
 
-      tr.appendChild(id);
-      tr.appendChild(date);
-      tr.appendChild(service);
-      tr.appendChild(category);
-      tr.appendChild(amount);
-      tr.appendChild(uid);
-      tr.appendChild(player);
-      tr.appendChild(utr);
-      tr.appendChild(statusCell);
+      tr.appendChild(
+        id
+      );
+
+      tr.appendChild(
+        date
+      );
+
+      tr.appendChild(
+        service
+      );
+
+      tr.appendChild(
+        category
+      );
+
+      tr.appendChild(
+        amount
+      );
+
+      tr.appendChild(
+        uid
+      );
+
+      tr.appendChild(
+        player
+      );
+
+      tr.appendChild(
+        utr
+      );
+
+      tr.appendChild(
+        statusCell
+      );
+
 
       ordersBody.appendChild(
         tr
@@ -586,9 +729,11 @@ async function updateOrderStatus(
 
   const oldValue =
     select.dataset.oldValue ||
-    "";
+    "pending";
+
 
   select.disabled = true;
+
 
   try {
 
@@ -605,19 +750,26 @@ async function updateOrderStatus(
           orderId
         );
 
+
     if (error) {
+
       throw error;
+
     }
+
 
     select.dataset.oldValue =
       newStatus;
+
 
     showMessage(
       "Order status updated: " +
       newStatus
     );
 
+
     await loadOrders();
+
 
   } catch (error) {
 
@@ -626,19 +778,24 @@ async function updateOrderStatus(
       error
     );
 
+
     alert(
       "Status update nahi hua.\n\n" +
-      (error.message || "Unknown error")
+      (
+        error.message ||
+        "Unknown error"
+      )
     );
 
-    if (oldValue) {
-      select.value =
-        oldValue;
-    }
+
+    select.value =
+      oldValue;
+
 
   } finally {
 
-    select.disabled = false;
+    select.disabled =
+      false;
 
   }
 
@@ -650,7 +807,9 @@ async function updateOrderStatus(
    ========================================== */
 
 document
-  .getElementById("logoutButton")
+  .getElementById(
+    "logoutButton"
+  )
   .addEventListener(
     "click",
     async function () {
@@ -658,6 +817,8 @@ document
       await supabaseClient.auth.signOut();
 
       showLogin();
+
+      loginError.textContent = "";
 
     }
   );
@@ -668,7 +829,9 @@ document
    ========================================== */
 
 document
-  .getElementById("refreshButton")
+  .getElementById(
+    "refreshButton"
+  )
   .addEventListener(
     "click",
     async function () {
@@ -683,22 +846,33 @@ document
    HELPERS
    ========================================== */
 
-function formatDate(value) {
+function formatDate(
+  value
+) {
 
   if (!value) {
+
     return "-";
+
   }
 
+
   const date =
-    new Date(value);
+    new Date(
+      value
+    );
+
 
   if (
     Number.isNaN(
       date.getTime()
     )
   ) {
+
     return "-";
+
   }
+
 
   return date.toLocaleString(
     "en-IN",
@@ -714,14 +888,18 @@ function formatDate(value) {
 }
 
 
-function showMessage(text) {
+function showMessage(
+  text
+) {
 
   adminMessage.textContent =
     text;
 
+
   adminMessage.classList.remove(
     "hidden"
   );
+
 
   setTimeout(
     function () {
@@ -752,6 +930,7 @@ function showMessage(text) {
     } =
       await supabaseClient.auth.getSession();
 
+
     if (session) {
 
       await checkAdmin();
@@ -762,6 +941,7 @@ function showMessage(text) {
 
     }
 
+
   } catch (error) {
 
     console.error(
@@ -769,7 +949,15 @@ function showMessage(text) {
       error
     );
 
+
     showLogin();
+
+    loginError.textContent =
+      "Load failed: " +
+      (
+        error.message ||
+        "Unknown error"
+      );
 
   }
 
