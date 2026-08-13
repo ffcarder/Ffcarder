@@ -8,86 +8,122 @@
 </head>
 
 <body>
+
 <header class="topbar">
   <div class="brand">FFM <span>STORE</span></div>
   <div class="tag">Premium Free Fire Services</div>
 </header>
 
 <main>
+
+  <!-- HERO -->
   <section class="hero">
     <div>
       <p class="eyebrow">FAST • SIMPLE • MANUAL VERIFIED</p>
-      <h1>Free Fire services,<br><span>without the hassle.</span></h1>
+
+      <h1>
+        Free Fire services,<br>
+        <span>without the hassle.</span>
+      </h1>
+
       <p class="sub">
-        Choose a service, enter your Free Fire UID, pay by UPI and submit your UTR.
+        Choose a service, enter your Free Fire UID,
+        pay by UPI and submit your UTR.
         Orders are processed after payment verification.
       </p>
     </div>
   </section>
 
-  <section id="services">
-    <div class="section-head">
-      <div>
-        <p class="eyebrow">STORE</p>
-        <h2>Popular Services</h2>
-      </div>
-      <div class="pill">Manual verification</div>
-    </div>
 
-    <nav id="catNav" class="cat-nav" aria-label="Service categories"></nav>
+  <!-- SERVICES -->
+  <section id="services">
+
+    <nav id="catNav"
+         class="cat-nav"
+         aria-label="Service categories">
+    </nav>
 
     <div id="serviceGrid" class="grid"></div>
 
     <p id="tgContact" class="tg-contact"></p>
+
   </section>
+
 </main>
 
+
+<!-- CHECKOUT MODAL -->
 <div id="checkout" class="modal hidden">
+
   <div class="modal-card">
+
     <button class="close" onclick="closeCheckout()">×</button>
 
     <p class="eyebrow">CHECKOUT</p>
+
     <h2 id="checkoutTitle"></h2>
+
     <div class="price" id="checkoutPrice"></div>
 
     <label>
       <span id="uidLabelText">Free Fire UID</span>
-      <input id="uid" inputmode="numeric" placeholder="Enter UID">
+      <input
+        id="uid"
+        inputmode="numeric"
+        placeholder="Enter UID"
+      >
     </label>
 
     <label id="playerField">
-      <span id="playerLabelText">Player name (optional)</span>
-      <input id="player" placeholder="Enter player name">
+      <span id="playerLabelText">
+        Player name (optional)
+      </span>
+
+      <input
+        id="player"
+        placeholder="Enter player name"
+      >
     </label>
 
     <p id="playerHelp" class="field-help"></p>
 
-    <button class="btn full" onclick="showPayment()">
+    <button
+      class="btn full"
+      onclick="showPayment()">
       Continue to Payment
     </button>
+
   </div>
 </div>
 
+
+<!-- PAYMENT MODAL -->
 <div id="payment" class="modal hidden">
+
   <div class="modal-card payment-card">
+
     <button class="close" onclick="closePayment()">×</button>
 
     <p class="eyebrow">PAYMENT</p>
+
     <h2>Pay via UPI</h2>
 
     <div class="upi-box">
+
       <div class="qr-wrap">
         <img
           src="IMG_1954.jpeg"
-          alt="UPI QR code"
-        >
+          alt="UPI QR code">
       </div>
 
       <strong>ffcardergupta@fam</strong>
 
-      <button class="copy" onclick="copyUPI()">
+      <button
+        class="copy"
+        onclick="copyUPI()">
         Copy UPI ID
       </button>
+
     </div>
 
     <p class="hint">
@@ -95,29 +131,58 @@
     </p>
 
     <div class="steps">
-      <div><b>1</b> Pay the exact order amount.</div>
-      <div><b>2</b> Copy the UTR / transaction ID after payment.</div>
-      <div><b>3</b> Submit the UTR below. Your order stays pending until verified.</div>
+
+      <div>
+        <b>1</b>
+        Pay the exact order amount.
+      </div>
+
+      <div>
+        <b>2</b>
+        Copy the UTR / transaction ID after payment.
+      </div>
+
+      <div>
+        <b>3</b>
+        Submit the UTR below. Your order stays pending until verified.
+      </div>
+
     </div>
 
     <label>
       UTR / Transaction ID
-      <input id="utr" placeholder="Enter UTR after payment">
+
+      <input
+        id="utr"
+        placeholder="Enter UTR after payment">
     </label>
 
-    <button class="btn full" onclick="submitOrder()">
+    <button
+      class="btn full"
+      onclick="submitOrder()">
       Submit Payment Details
     </button>
 
     <p id="status" class="status"></p>
+
   </div>
 </div>
 
+
 <footer>
-  <div>© 2026 FFM STORE</div>
-  <div>Payments are manually verified before fulfillment.</div>
+
+  <div>
+    © 2026 FFM STORE
+  </div>
+
+  <div>
+    Payments are manually verified before fulfillment.
+  </div>
+
 </footer>
 
+
 <script src="app.js"></script>
+
 </body>
 </html>
