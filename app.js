@@ -8,6 +8,11 @@ const supabaseClient = window.supabase.createClient(
 
 const UPI = "ffcarderupta@fam";
 
+
+/* =========================
+   CATEGORIES
+========================= */
+
 const categories = [
   { id: "unsubscribe", name: "Unsubscribe" },
   { id: "craftland", name: "Craftland Bots" },
@@ -16,7 +21,13 @@ const categories = [
   { id: "redeem", name: "Play Store Redeem Code" }
 ];
 
+
+/* =========================
+   SERVICES
+========================= */
+
 const services = [
+
   // Unsubscribe
   {
     cat: "unsubscribe",
@@ -25,6 +36,7 @@ const services = [
     meta: "Delivery: 5 minutes",
     price: 600
   },
+
   {
     cat: "unsubscribe",
     name: "Double Unsubscribe",
@@ -33,7 +45,8 @@ const services = [
     price: 1000
   },
 
-  // Craftland
+
+  // Craftland Bots
   {
     cat: "craftland",
     name: "Craftland Followers",
@@ -41,6 +54,7 @@ const services = [
     meta: "Limit 200/day • 6hr–24hr",
     price: 25
   },
+
   {
     cat: "craftland",
     name: "Craftland Followers (Fast Plan)",
@@ -48,6 +62,7 @@ const services = [
     meta: "Limit 25k/day • 5min–2hr",
     price: 100
   },
+
   {
     cat: "craftland",
     name: "Craftland Map Likes",
@@ -55,6 +70,7 @@ const services = [
     meta: "Limit 2k/day • 3hr–15hr",
     price: 50
   },
+
   {
     cat: "craftland",
     name: "Craftland Map Stars",
@@ -62,6 +78,7 @@ const services = [
     meta: "Limit 150/day • 6hr–24hr",
     price: 30
   },
+
   {
     cat: "craftland",
     name: "Craftland Level Up",
@@ -71,6 +88,7 @@ const services = [
     priceText: "From ₹20"
   },
 
+
   // Guild Glory
   {
     cat: "guild",
@@ -79,6 +97,7 @@ const services = [
     meta: "Delivery: 3 days",
     price: 500
   },
+
   {
     cat: "guild",
     name: "Guild Region Top 15",
@@ -86,6 +105,7 @@ const services = [
     meta: "Delivery: 58 hours",
     price: 1400
   },
+
 
   // Free Fire Carding / Diamond Delivery
   {
@@ -95,6 +115,7 @@ const services = [
     meta: "Manual delivery",
     price: 1000
   },
+
   {
     cat: "diamonds",
     name: "10,000 Diamonds",
@@ -102,6 +123,7 @@ const services = [
     meta: "Manual delivery",
     price: 2000
   },
+
 
   // Play Store Redeem Code
   {
@@ -111,6 +133,7 @@ const services = [
     meta: "Digital delivery",
     price: 100
   },
+
   {
     cat: "redeem",
     name: "₹500 Play Store Redeem Code",
@@ -118,6 +141,7 @@ const services = [
     meta: "Digital delivery",
     price: 500
   },
+
   {
     cat: "redeem",
     name: "₹1,000 Play Store Redeem Code",
@@ -125,17 +149,20 @@ const services = [
     meta: "Digital delivery",
     price: 1000
   }
+
 ];
+
 
 let selected = null;
 let activeCat = categories[0].id;
 
 
 /* =========================
-   PRICE
+   PRICE LABEL
 ========================= */
 
 function priceLabel(service) {
+
   if (service.priceText) {
     return service.priceText;
   }
@@ -149,11 +176,13 @@ function priceLabel(service) {
 
 
 /* =========================
-   CATEGORY NAVIGATION
+   CATEGORY NAV
 ========================= */
 
 function renderNav() {
-  const nav = document.getElementById("catNav");
+
+  const nav =
+    document.getElementById("catNav");
 
   if (!nav) return;
 
@@ -171,6 +200,7 @@ function renderNav() {
 
 
 function selectCategory(id) {
+
   activeCat = id;
 
   renderNav();
@@ -183,16 +213,23 @@ function selectCategory(id) {
 ========================= */
 
 function renderCards() {
-  const grid = document.getElementById("serviceGrid");
+
+  const grid =
+    document.getElementById("serviceGrid");
 
   if (!grid) return;
 
   grid.innerHTML = services
+
     .map((service, index) => ({
       service,
       index
     }))
-    .filter(({ service }) => service.cat === activeCat)
+
+    .filter(({ service }) =>
+      service.cat === activeCat
+    )
+
     .map(({ service, index }) => `
       <article class="card">
 
@@ -222,14 +259,18 @@ function renderCards() {
 
       </article>
     `)
+
     .join("");
+
 
   const tgNote =
     document.getElementById("tgContact");
 
   if (tgNote) {
+
     tgNote.innerHTML =
       activeCat === "diamonds"
+
         ? `
           Need help?
           <a
@@ -239,6 +280,7 @@ function renderCards() {
             Contact Admin on Telegram (@carderffgupta)
           </a>
         `
+
         : "";
   }
 }
@@ -256,9 +298,11 @@ document.addEventListener(
       document.getElementById("serviceGrid");
 
     if (!grid) {
+
       console.error(
         "serviceGrid not found"
       );
+
       return;
     }
 
@@ -269,25 +313,34 @@ document.addEventListener(
 
 
 /* =========================
-   CHECKOUT
+   UNSUBSCRIBE CHECK
 ========================= */
 
 function isUnsubscribe(service) {
+
   return service &&
     service.cat === "unsubscribe";
 }
 
 
+/* =========================
+   OPEN CHECKOUT
+========================= */
+
 function openCheckout(index) {
+
   selected = services[index];
+
 
   document.getElementById(
     "checkoutTitle"
   ).textContent = selected.name;
 
+
   document.getElementById(
     "checkoutPrice"
-  ).textContent = priceLabel(selected);
+  ).textContent =
+    priceLabel(selected);
 
 
   const idInput =
@@ -313,7 +366,7 @@ function openCheckout(index) {
     );
 
 
-  /* Gmail service */
+  /* Gmail */
 
   if (isUnsubscribe(selected)) {
 
@@ -342,9 +395,11 @@ function openCheckout(index) {
         "none";
     }
 
-  } else {
+  }
 
-    /* Normal services */
+  /* Normal services */
+
+  else {
 
     labelText.textContent =
       "Free Fire UID";
@@ -402,11 +457,10 @@ function openCheckout(index) {
 
     playerHelp.textContent =
       "Add your contact number so I can contact you about your order.";
-
   }
 
 
-  /* Play Store Redeem */
+  /* Redeem code */
 
   else if (selected.cat === "redeem") {
 
@@ -430,7 +484,6 @@ function openCheckout(index) {
 
     playerHelp.textContent =
       "Add your contact details for code delivery.";
-
   }
 
 
@@ -468,6 +521,7 @@ function openCheckout(index) {
 
 
 function closeCheckout() {
+
   document
     .getElementById("checkout")
     .classList
@@ -476,7 +530,7 @@ function closeCheckout() {
 
 
 /* =========================
-   PAYMENT
+   CONTINUE TO PAYMENT
 ========================= */
 
 function showPayment() {
@@ -488,12 +542,11 @@ function showPayment() {
       .trim();
 
 
-  /* Gmail validation */
-
   if (isUnsubscribe(selected)) {
 
     const gmailPattern =
       /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+
 
     if (!value) {
 
@@ -503,6 +556,7 @@ function showPayment() {
 
       return;
     }
+
 
     if (!gmailPattern.test(value)) {
 
@@ -514,9 +568,6 @@ function showPayment() {
     }
 
   }
-
-
-  /* UID validation */
 
   else {
 
@@ -533,6 +584,7 @@ function showPayment() {
 
   closeCheckout();
 
+
   document
     .getElementById("payment")
     .classList
@@ -541,6 +593,7 @@ function showPayment() {
 
 
 function closePayment() {
+
   document
     .getElementById("payment")
     .classList
@@ -559,7 +612,9 @@ function copyUPI() {
     navigator.clipboard.writeText
   ) {
 
-    navigator.clipboard.writeText(UPI)
+    navigator.clipboard
+      .writeText(UPI)
+
       .then(() => {
 
         alert(
@@ -567,6 +622,7 @@ function copyUPI() {
         );
 
       })
+
       .catch(() => {
 
         alert(
@@ -575,7 +631,9 @@ function copyUPI() {
 
       });
 
-  } else {
+  }
+
+  else {
 
     alert(
       "UPI ID: " + UPI
@@ -585,7 +643,7 @@ function copyUPI() {
 
 
 /* =========================
-   SUBMIT ORDER TO SUPABASE
+   SUBMIT ORDER
 ========================= */
 
 async function submitOrder() {
@@ -635,18 +693,16 @@ async function submitOrder() {
   }
 
 
-  /*
-    Disable button while submitting
-    to prevent duplicate clicks.
-  */
-
   const submitButton =
     document.querySelector(
       "#payment .full"
     );
 
+
   if (submitButton) {
+
     submitButton.disabled = true;
+
     submitButton.textContent =
       "Submitting...";
   }
@@ -656,70 +712,74 @@ async function submitOrder() {
     "Submitting your order...";
 
 
-  /*
-    Database fields:
-    service_name
-    category
-    amount
-    uid
-    player_name
-    contact
-    utr
-    status
-  */
-
   let contact = null;
   let playerName = null;
 
 
   if (selected.cat === "diamonds") {
 
-    contact = player || null;
-
+    contact =
+      player || null;
   }
 
   else if (selected.cat === "redeem") {
 
-    contact = player || null;
-
+    contact =
+      player || null;
   }
 
   else {
 
-    playerName = player || null;
-
+    playerName =
+      player || null;
   }
 
 
   const order = {
 
-    service_name: selected.name,
+    service_name:
+      selected.name,
 
-    category: selected.cat,
+    category:
+      selected.cat,
 
-    amount: selected.price,
+    amount:
+      selected.price,
 
-    uid: uid || null,
+    uid:
+      uid || null,
 
-    player_name: playerName,
+    player_name:
+      playerName,
 
-    contact: contact,
+    contact:
+      contact,
 
-    utr: utr,
+    utr:
+      utr,
 
-    status: "pending"
+    status:
+      "pending"
   };
 
 
   try {
 
-    const {
-      data,
-      error
-    } = await supabaseClient
-      .from("orders")
-      .insert([order])
-      .select();
+    /*
+      IMPORTANT:
+      No .select() here.
+
+      Customer only needs to INSERT.
+      We don't give the public client
+      permission to read order rows.
+    */
+
+    const { error } =
+      await supabaseClient
+
+        .from("orders")
+
+        .insert([order]);
 
 
     if (error) {
@@ -729,20 +789,24 @@ async function submitOrder() {
         error
       );
 
+
       status.textContent =
         "Order submit nahi hua. Please try again.";
+
 
       alert(
         "Order submit nahi hua. Supabase error check karo."
       );
 
+
       return;
     }
 
 
+    /* SUCCESS */
+
     console.log(
-      "Order created:",
-      data
+      "Order submitted successfully"
     );
 
 
@@ -755,32 +819,38 @@ async function submitOrder() {
     );
 
 
-    /*
-      Clear UTR after successful order.
-    */
+    /* Clear fields */
 
     utrInput.value = "";
 
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     console.error(
       "Unexpected error:",
       error
     );
 
+
     status.textContent =
       "Something went wrong. Please try again.";
+
 
     alert(
       "Something went wrong. Please try again."
     );
 
-  } finally {
+  }
+
+
+  finally {
 
     if (submitButton) {
 
-      submitButton.disabled = false;
+      submitButton.disabled =
+        false;
 
       submitButton.textContent =
         "Submit Payment Details";
