@@ -1,11 +1,11 @@
-const UPI = "ffcardergupta@fam";
+const UPI = "ffcarderupta@fam";
 
 const categories = [
   { id: "unsubscribe", name: "Unsubscribe" },
   { id: "craftland", name: "Craftland Bots" },
   { id: "guild", name: "Guild Glory" },
   { id: "diamonds", name: "Free Fire Carding" },
-  { id: "playstore", name: "Play Store Redeem Code" }
+  { id: "redeem", name: "Play Store Redeem Code" }
 ];
 
 const services = [
@@ -25,7 +25,7 @@ const services = [
     price: 1000
   },
 
-  // Craftland Bots
+  // Craftland
   {
     cat: "craftland",
     name: "Craftland Followers",
@@ -79,50 +79,43 @@ const services = [
     price: 1400
   },
 
-  // Free Fire Carding
+  // Free Fire diamond delivery
   {
     cat: "diamonds",
     name: "4,000 Diamonds",
-    desc: "Free Fire service",
+    desc: "Free Fire diamond delivery",
     meta: "",
     price: 1000
   },
   {
     cat: "diamonds",
     name: "10,000 Diamonds",
-    desc: "Free Fire service",
+    desc: "Free Fire diamond delivery",
     meta: "",
     price: 2000
-  },
-  {
-    cat: "diamonds",
-    name: "12,000 Diamonds",
-    desc: "Free Fire service",
-    meta: "",
-    price: 3000
   },
 
   // Play Store Redeem Code
   {
-    cat: "playstore",
-    name: "₹600 Play Store Code",
-    desc: "₹600 value redeem code",
+    cat: "redeem",
+    name: "₹100 Play Store Redeem Code",
+    desc: "Google Play gift code",
     meta: "Digital delivery",
-    price: 300
+    price: 100
   },
   {
-    cat: "playstore",
-    name: "₹1,400 Play Store Code",
-    desc: "₹1,400 value redeem code",
+    cat: "redeem",
+    name: "₹500 Play Store Redeem Code",
+    desc: "Google Play gift code",
     meta: "Digital delivery",
-    price: 800
+    price: 500
   },
   {
-    cat: "playstore",
-    name: "₹1,800 Play Store Code",
-    desc: "₹1,800 value redeem code",
+    cat: "redeem",
+    name: "₹1,000 Play Store Redeem Code",
+    desc: "Google Play gift code",
     meta: "Digital delivery",
-    price: 1200
+    price: 1000
   }
 ];
 
@@ -131,13 +124,17 @@ let activeCat = categories[0].id;
 
 function priceLabel(service) {
   if (service.priceText) return service.priceText;
-  return service.price
-    ? "₹" + service.price.toLocaleString("en-IN")
-    : "Custom";
+
+  if (service.price) {
+    return "₹" + service.price.toLocaleString("en-IN");
+  }
+
+  return "Custom";
 }
 
 function renderCards() {
   const grid = document.getElementById("serviceGrid");
+
   if (!grid) return;
 
   grid.innerHTML = services
@@ -145,7 +142,9 @@ function renderCards() {
     .filter(({ service }) => service.cat === activeCat)
     .map(({ service, index }) => `
       <article class="card">
+
         <h3>${service.name}</h3>
+
         <p>${service.desc}</p>
 
         ${
@@ -155,14 +154,19 @@ function renderCards() {
         }
 
         <div class="row">
-          <span class="price">${priceLabel(service)}</span>
+
+          <span class="price">
+            ${priceLabel(service)}
+          </span>
+
           <button
             class="smallbtn"
-            onclick="openCheckout(${index})"
-          >
+            onclick="openCheckout(${index})">
             Buy now
           </button>
+
         </div>
+
       </article>
     `)
     .join("");
@@ -172,39 +176,55 @@ function renderCards() {
   if (tgNote) {
     tgNote.innerHTML =
       activeCat === "diamonds"
-        ? `Need help? <a href="https://t.me/carderffgupta" target="_blank" rel="noopener">Contact Admin on Telegram (@carderffgupta)</a>`
+        ? `
+          Need help?
+          <a
+            href="https://t.me/carderffgupta"
+            target="_blank"
+            rel="noopener">
+            Contact Admin on Telegram (@carderffgupta)
+          </a>
+        `
         : "";
   }
 }
 
 function renderNav() {
   const nav = document.getElementById("catNav");
+
   if (!nav) return;
 
   nav.innerHTML = categories
-    .map(
-      category => `
-        <button
-          class="cat-btn ${
-            category.id === activeCat ? "active" : ""
-          }"
-          data-cat="${category.id}"
-          onclick="selectCategory('${category.id}')"
-        >
-          ${category.name}
-        </button>
-      `
-    )
+    .map(category => `
+      <button
+        class="cat-btn ${
+          category.id === activeCat ? "active" : ""
+        }"
+        data-cat="${category.id}"
+        onclick="selectCategory('${category.id}')">
+
+        ${category.name}
+
+      </button>
+    `)
     .join("");
 }
 
 function selectCategory(id) {
   activeCat = id;
+
   renderNav();
   renderCards();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  const grid = document.getElementById("serviceGrid");
+
+  if (!grid) {
+    console.error("serviceGrid not found");
+    return;
+  }
+
   renderNav();
   renderCards();
 });
@@ -216,27 +236,51 @@ function isUnsubscribe(service) {
 function openCheckout(index) {
   selected = services[index];
 
-  const title = document.getElementById("checkoutTitle");
-  const price = document.getElementById("checkoutPrice");
+  document.getElementById("checkoutTitle").textContent =
+    selected.name;
 
-  if (title) title.textContent = selected.name;
-  if (price) price.textContent = priceLabel(selected);
+  document.getElementById("checkoutPrice").textContent =
+    priceLabel(selected);
 
-  const idInput = document.getElementById("uid");
-  const labelText = document.getElementById("uidLabelText");
-  const playerField = document.getElementById("playerField");
-  const playerInput = document.getElementById("player");
+  const idInput =
+    document.getElementById("uid");
+
+  const labelText =
+    document.getElementById("uidLabelText");
+
+  const playerField =
+    document.getElementById("playerField");
+
+  const playerInput =
+    document.getElementById("player");
+
   const playerLabelText =
     document.getElementById("playerLabelText");
+
   const playerHelp =
     document.getElementById("playerHelp");
 
+  /*
+    Unsubscribe:
+    Gmail input
+  */
   if (isUnsubscribe(selected)) {
-    labelText.textContent = "Gmail address";
+
+    labelText.textContent =
+      "Gmail address";
 
     idInput.value = "";
-    idInput.setAttribute("type", "email");
-    idInput.setAttribute("inputmode", "email");
+
+    idInput.setAttribute(
+      "inputmode",
+      "email"
+    );
+
+    idInput.setAttribute(
+      "type",
+      "email"
+    );
+
     idInput.setAttribute(
       "placeholder",
       "yourname@gmail.com"
@@ -245,13 +289,33 @@ function openCheckout(index) {
     if (playerField) {
       playerField.style.display = "none";
     }
+
   } else {
-    labelText.textContent = "Free Fire UID";
+
+    /*
+      All normal game/service orders:
+      Free Fire UID
+    */
+
+    labelText.textContent =
+      "Free Fire UID";
 
     idInput.value = "";
-    idInput.setAttribute("type", "text");
-    idInput.setAttribute("inputmode", "numeric");
-    idInput.setAttribute("placeholder", "Enter UID");
+
+    idInput.setAttribute(
+      "inputmode",
+      "numeric"
+    );
+
+    idInput.setAttribute(
+      "type",
+      "text"
+    );
+
+    idInput.setAttribute(
+      "placeholder",
+      "Enter UID"
+    );
 
     if (playerField) {
       playerField.style.display = "";
@@ -262,11 +326,25 @@ function openCheckout(index) {
     playerInput.value = "";
   }
 
+  /*
+    Diamond delivery:
+    contact number
+  */
   if (selected.cat === "diamonds") {
-    playerLabelText.textContent = "Contact Number";
 
-    playerInput.setAttribute("type", "tel");
-    playerInput.setAttribute("inputmode", "tel");
+    playerLabelText.textContent =
+      "Contact Number";
+
+    playerInput.setAttribute(
+      "type",
+      "tel"
+    );
+
+    playerInput.setAttribute(
+      "inputmode",
+      "tel"
+    );
+
     playerInput.setAttribute(
       "placeholder",
       "Enter your WhatsApp/Telegram number"
@@ -274,12 +352,50 @@ function openCheckout(index) {
 
     playerHelp.textContent =
       "Add your contact number so I can contact you about your order.";
+
+  } else if (selected.cat === "redeem") {
+
+    /*
+      Redeem code:
+      email/contact for delivery
+    */
+
+    playerLabelText.textContent =
+      "Email / Contact Number";
+
+    playerInput.setAttribute(
+      "type",
+      "text"
+    );
+
+    playerInput.setAttribute(
+      "inputmode",
+      "text"
+    );
+
+    playerInput.setAttribute(
+      "placeholder",
+      "Enter email or contact number"
+    );
+
+    playerHelp.textContent =
+      "Add your contact details for code delivery.";
+
   } else {
+
     playerLabelText.textContent =
       "Player name (optional)";
 
-    playerInput.setAttribute("type", "text");
-    playerInput.setAttribute("inputmode", "text");
+    playerInput.setAttribute(
+      "type",
+      "text"
+    );
+
+    playerInput.setAttribute(
+      "inputmode",
+      "text"
+    );
+
     playerInput.setAttribute(
       "placeholder",
       "Enter player name"
@@ -290,20 +406,26 @@ function openCheckout(index) {
 
   document
     .getElementById("checkout")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
 }
 
 function closeCheckout() {
   document
     .getElementById("checkout")
-    .classList.add("hidden");
+    .classList
+    .add("hidden");
 }
 
 function showPayment() {
   const value =
-    document.getElementById("uid").value.trim();
+    document
+      .getElementById("uid")
+      .value
+      .trim();
 
   if (isUnsubscribe(selected)) {
+
     const gmailPattern =
       /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
 
@@ -318,7 +440,9 @@ function showPayment() {
       );
       return;
     }
+
   } else {
+
     if (!value) {
       alert("Free Fire UID enter karo.");
       return;
@@ -329,13 +453,15 @@ function showPayment() {
 
   document
     .getElementById("payment")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
 }
 
 function closePayment() {
   document
     .getElementById("payment")
-    .classList.add("hidden");
+    .classList
+    .add("hidden");
 }
 
 function copyUPI() {
@@ -343,12 +469,17 @@ function copyUPI() {
     navigator.clipboard.writeText(UPI);
   }
 
-  alert("UPI ID copied: " + UPI);
+  alert(
+    "UPI ID copied: " + UPI
+  );
 }
 
 function submitOrder() {
   const utr =
-    document.getElementById("utr").value.trim();
+    document
+      .getElementById("utr")
+      .value
+      .trim();
 
   if (!utr) {
     alert(
@@ -357,6 +488,8 @@ function submitOrder() {
     return;
   }
 
-  document.getElementById("status").textContent =
-    "Submitted. Your payment is pending manual verification.";
+  document
+    .getElementById("status")
+    .textContent =
+      "Submitted. Your payment is pending manual verification.";
 }
