@@ -224,7 +224,7 @@ async function getStockMap() {
     error
   } =
     await supabaseClient
-      .from("service_stock")
+      .from("services")
       .select(
         "service_key,is_in_stock"
       );
