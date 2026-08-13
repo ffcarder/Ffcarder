@@ -8,11 +8,6 @@ const supabaseClient = window.supabase.createClient(
 
 const UPI = "ffcarderupta@fam";
 
-
-/* =========================
-   CATEGORIES
-========================= */
-
 const categories = [
   { id: "unsubscribe", name: "Unsubscribe" },
   { id: "craftland", name: "Craftland Bots" },
@@ -21,14 +16,7 @@ const categories = [
   { id: "redeem", name: "Play Store Redeem Code" }
 ];
 
-
-/* =========================
-   SERVICES
-========================= */
-
 const services = [
-
-  // Unsubscribe
   {
     cat: "unsubscribe",
     name: "Single Unsubscribe",
@@ -36,7 +24,6 @@ const services = [
     meta: "Delivery: 5 minutes",
     price: 600
   },
-
   {
     cat: "unsubscribe",
     name: "Double Unsubscribe",
@@ -45,8 +32,6 @@ const services = [
     price: 1000
   },
 
-
-  // Craftland Bots
   {
     cat: "craftland",
     name: "Craftland Followers",
@@ -54,7 +39,6 @@ const services = [
     meta: "Limit 200/day • 6hr–24hr",
     price: 25
   },
-
   {
     cat: "craftland",
     name: "Craftland Followers (Fast Plan)",
@@ -62,7 +46,6 @@ const services = [
     meta: "Limit 25k/day • 5min–2hr",
     price: 100
   },
-
   {
     cat: "craftland",
     name: "Craftland Map Likes",
@@ -70,7 +53,6 @@ const services = [
     meta: "Limit 2k/day • 3hr–15hr",
     price: 50
   },
-
   {
     cat: "craftland",
     name: "Craftland Map Stars",
@@ -78,7 +60,6 @@ const services = [
     meta: "Limit 150/day • 6hr–24hr",
     price: 30
   },
-
   {
     cat: "craftland",
     name: "Craftland Level Up",
@@ -88,8 +69,6 @@ const services = [
     priceText: "From ₹20"
   },
 
-
-  // Guild Glory
   {
     cat: "guild",
     name: "Guild Level 7",
@@ -97,7 +76,6 @@ const services = [
     meta: "Delivery: 3 days",
     price: 500
   },
-
   {
     cat: "guild",
     name: "Guild Region Top 15",
@@ -106,8 +84,6 @@ const services = [
     price: 1400
   },
 
-
-  // Free Fire Carding / Diamond Delivery
   {
     cat: "diamonds",
     name: "4,000 Diamonds",
@@ -115,7 +91,6 @@ const services = [
     meta: "Manual delivery",
     price: 1000
   },
-
   {
     cat: "diamonds",
     name: "10,000 Diamonds",
@@ -124,8 +99,6 @@ const services = [
     price: 2000
   },
 
-
-  // Play Store Redeem Code
   {
     cat: "redeem",
     name: "₹100 Play Store Redeem Code",
@@ -133,7 +106,6 @@ const services = [
     meta: "Digital delivery",
     price: 100
   },
-
   {
     cat: "redeem",
     name: "₹500 Play Store Redeem Code",
@@ -141,7 +113,6 @@ const services = [
     meta: "Digital delivery",
     price: 500
   },
-
   {
     cat: "redeem",
     name: "₹1,000 Play Store Redeem Code",
@@ -149,20 +120,12 @@ const services = [
     meta: "Digital delivery",
     price: 1000
   }
-
 ];
-
 
 let selected = null;
 let activeCat = categories[0].id;
 
-
-/* =========================
-   PRICE LABEL
-========================= */
-
 function priceLabel(service) {
-
   if (service.priceText) {
     return service.priceText;
   }
@@ -174,15 +137,8 @@ function priceLabel(service) {
   return "Custom";
 }
 
-
-/* =========================
-   CATEGORY NAV
-========================= */
-
 function renderNav() {
-
-  const nav =
-    document.getElementById("catNav");
+  const nav = document.getElementById("catNav");
 
   if (!nav) return;
 
@@ -198,41 +154,25 @@ function renderNav() {
     .join("");
 }
 
-
 function selectCategory(id) {
-
   activeCat = id;
-
   renderNav();
   renderCards();
 }
 
-
-/* =========================
-   SERVICE CARDS
-========================= */
-
 function renderCards() {
-
-  const grid =
-    document.getElementById("serviceGrid");
+  const grid = document.getElementById("serviceGrid");
 
   if (!grid) return;
 
   grid.innerHTML = services
-
     .map((service, index) => ({
       service,
       index
     }))
-
-    .filter(({ service }) =>
-      service.cat === activeCat
-    )
-
+    .filter(({ service }) => service.cat === activeCat)
     .map(({ service, index }) => `
       <article class="card">
-
         <h3>${service.name}</h3>
 
         <p>${service.desc}</p>
@@ -244,7 +184,6 @@ function renderCards() {
         }
 
         <div class="row">
-
           <span class="price">
             ${priceLabel(service)}
           </span>
@@ -254,23 +193,16 @@ function renderCards() {
             onclick="openCheckout(${index})">
             Buy now
           </button>
-
         </div>
-
       </article>
     `)
-
     .join("");
 
-
-  const tgNote =
-    document.getElementById("tgContact");
+  const tgNote = document.getElementById("tgContact");
 
   if (tgNote) {
-
     tgNote.innerHTML =
       activeCat === "diamonds"
-
         ? `
           Need help?
           <a
@@ -280,68 +212,42 @@ function renderCards() {
             Contact Admin on Telegram (@carderffgupta)
           </a>
         `
-
         : "";
   }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  const grid = document.getElementById("serviceGrid");
 
-/* =========================
-   PAGE LOAD
-========================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
-
-    const grid =
-      document.getElementById("serviceGrid");
-
-    if (!grid) {
-
-      console.error(
-        "serviceGrid not found"
-      );
-
-      return;
-    }
-
-    renderNav();
-    renderCards();
+  if (!grid) {
+    console.error("serviceGrid not found");
+    return;
   }
-);
 
-
-/* =========================
-   UNSUBSCRIBE CHECK
-========================= */
+  renderNav();
+  renderCards();
+});
 
 function isUnsubscribe(service) {
-
-  return service &&
-    service.cat === "unsubscribe";
+  return service && service.cat === "unsubscribe";
 }
 
-
-/* =========================
-   OPEN CHECKOUT
-========================= */
-
 function openCheckout(index) {
-
   selected = services[index];
 
+  const checkoutTitle =
+    document.getElementById("checkoutTitle");
 
-  document.getElementById(
-    "checkoutTitle"
-  ).textContent = selected.name;
+  const checkoutPrice =
+    document.getElementById("checkoutPrice");
 
+  if (checkoutTitle) {
+    checkoutTitle.textContent = selected.name;
+  }
 
-  document.getElementById(
-    "checkoutPrice"
-  ).textContent =
-    priceLabel(selected);
-
+  if (checkoutPrice) {
+    checkoutPrice.textContent = priceLabel(selected);
+  }
 
   const idInput =
     document.getElementById("uid");
@@ -356,100 +262,52 @@ function openCheckout(index) {
     document.getElementById("player");
 
   const playerLabelText =
-    document.getElementById(
-      "playerLabelText"
-    );
+    document.getElementById("playerLabelText");
 
   const playerHelp =
-    document.getElementById(
-      "playerHelp"
-    );
-
-
-  /* Gmail */
+    document.getElementById("playerHelp");
 
   if (isUnsubscribe(selected)) {
-
-    labelText.textContent =
-      "Gmail address";
+    labelText.textContent = "Gmail address";
 
     idInput.value = "";
 
-    idInput.setAttribute(
-      "inputmode",
-      "email"
-    );
-
-    idInput.setAttribute(
-      "type",
-      "email"
-    );
-
+    idInput.setAttribute("inputmode", "email");
+    idInput.setAttribute("type", "email");
     idInput.setAttribute(
       "placeholder",
       "yourname@gmail.com"
     );
 
     if (playerField) {
-      playerField.style.display =
-        "none";
+      playerField.style.display = "none";
     }
-
-  }
-
-  /* Normal services */
-
-  else {
-
-    labelText.textContent =
-      "Free Fire UID";
+  } else {
+    labelText.textContent = "Free Fire UID";
 
     idInput.value = "";
 
-    idInput.setAttribute(
-      "inputmode",
-      "numeric"
-    );
-
-    idInput.setAttribute(
-      "type",
-      "text"
-    );
-
+    idInput.setAttribute("inputmode", "numeric");
+    idInput.setAttribute("type", "text");
     idInput.setAttribute(
       "placeholder",
       "Enter UID"
     );
 
     if (playerField) {
-      playerField.style.display =
-        "";
+      playerField.style.display = "";
     }
   }
-
 
   if (playerInput) {
     playerInput.value = "";
   }
 
-
-  /* Diamond delivery */
-
   if (selected.cat === "diamonds") {
+    playerLabelText.textContent = "Contact Number";
 
-    playerLabelText.textContent =
-      "Contact Number";
-
-    playerInput.setAttribute(
-      "type",
-      "tel"
-    );
-
-    playerInput.setAttribute(
-      "inputmode",
-      "tel"
-    );
-
+    playerInput.setAttribute("type", "tel");
+    playerInput.setAttribute("inputmode", "tel");
     playerInput.setAttribute(
       "placeholder",
       "Enter your WhatsApp/Telegram number"
@@ -459,24 +317,12 @@ function openCheckout(index) {
       "Add your contact number so I can contact you about your order.";
   }
 
-
-  /* Redeem code */
-
   else if (selected.cat === "redeem") {
-
     playerLabelText.textContent =
       "Email / Contact Number";
 
-    playerInput.setAttribute(
-      "type",
-      "text"
-    );
-
-    playerInput.setAttribute(
-      "inputmode",
-      "text"
-    );
-
+    playerInput.setAttribute("type", "text");
+    playerInput.setAttribute("inputmode", "text");
     playerInput.setAttribute(
       "placeholder",
       "Enter email or contact number"
@@ -486,24 +332,12 @@ function openCheckout(index) {
       "Add your contact details for code delivery.";
   }
 
-
-  /* Other services */
-
   else {
-
     playerLabelText.textContent =
       "Player name (optional)";
 
-    playerInput.setAttribute(
-      "type",
-      "text"
-    );
-
-    playerInput.setAttribute(
-      "inputmode",
-      "text"
-    );
-
+    playerInput.setAttribute("type", "text");
+    playerInput.setAttribute("inputmode", "text");
     playerInput.setAttribute(
       "placeholder",
       "Enter player name"
@@ -512,78 +346,49 @@ function openCheckout(index) {
     playerHelp.textContent = "";
   }
 
-
   document
     .getElementById("checkout")
     .classList
     .remove("hidden");
 }
 
-
 function closeCheckout() {
-
   document
     .getElementById("checkout")
     .classList
     .add("hidden");
 }
 
-
-/* =========================
-   CONTINUE TO PAYMENT
-========================= */
-
 function showPayment() {
-
   const value =
     document
       .getElementById("uid")
       .value
       .trim();
 
-
   if (isUnsubscribe(selected)) {
-
     const gmailPattern =
       /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
 
-
     if (!value) {
-
-      alert(
-        "Gmail address enter karo."
-      );
-
+      alert("Gmail address enter karo.");
       return;
     }
 
-
     if (!gmailPattern.test(value)) {
-
       alert(
         "Sahi Gmail address enter karo (e.g. yourname@gmail.com)."
       );
-
       return;
     }
-
-  }
-
-  else {
-
+  } else {
     if (!value) {
-
-      alert(
-        "Free Fire UID enter karo."
-      );
-
+      alert("Free Fire UID enter karo.");
       return;
     }
   }
-
 
   closeCheckout();
-
 
   document
     .getElementById("payment")
@@ -591,63 +396,32 @@ function showPayment() {
     .remove("hidden");
 }
 
-
 function closePayment() {
-
   document
     .getElementById("payment")
     .classList
     .add("hidden");
 }
 
-
-/* =========================
-   COPY UPI
-========================= */
-
 function copyUPI() {
-
   if (
     navigator.clipboard &&
     navigator.clipboard.writeText
   ) {
-
     navigator.clipboard
       .writeText(UPI)
-
       .then(() => {
-
-        alert(
-          "UPI ID copied: " + UPI
-        );
-
+        alert("UPI ID copied: " + UPI);
       })
-
       .catch(() => {
-
-        alert(
-          "UPI ID: " + UPI
-        );
-
+        alert("UPI ID: " + UPI);
       });
-
-  }
-
-  else {
-
-    alert(
-      "UPI ID: " + UPI
-    );
+  } else {
+    alert("UPI ID: " + UPI);
   }
 }
 
-
-/* =========================
-   SUBMIT ORDER
-========================= */
-
 async function submitOrder() {
-
   const utrInput =
     document.getElementById("utr");
 
@@ -660,198 +434,144 @@ async function submitOrder() {
   const status =
     document.getElementById("status");
 
-
   const utr =
-    utrInput.value.trim();
+    utrInput
+      ? utrInput.value.trim()
+      : "";
 
   const uid =
-    uidInput.value.trim();
+    uidInput
+      ? uidInput.value.trim()
+      : "";
 
   const player =
     playerInput
       ? playerInput.value.trim()
       : "";
 
-
   if (!utr) {
-
     alert(
       "Payment ke baad UTR / Transaction ID enter karo."
     );
-
     return;
   }
-
 
   if (!selected) {
-
-    alert(
-      "Please select a service first."
-    );
-
+    alert("Please select a service first.");
     return;
   }
-
 
   const submitButton =
     document.querySelector(
       "#payment .full"
     );
 
-
   if (submitButton) {
-
     submitButton.disabled = true;
-
-    submitButton.textContent =
-      "Submitting...";
+    submitButton.textContent = "Submitting...";
   }
 
-
-  status.textContent =
-    "Submitting your order...";
-
+  if (status) {
+    status.textContent =
+      "Submitting your order...";
+  }
 
   let contact = null;
   let playerName = null;
 
-
-  if (selected.cat === "diamonds") {
-
-    contact =
-      player || null;
+  if (
+    selected.cat === "diamonds" ||
+    selected.cat === "redeem"
+  ) {
+    contact = player || null;
+  } else {
+    playerName = player || null;
   }
-
-  else if (selected.cat === "redeem") {
-
-    contact =
-      player || null;
-  }
-
-  else {
-
-    playerName =
-      player || null;
-  }
-
 
   const order = {
-
-    service_name:
-      selected.name,
-
-    category:
-      selected.cat,
-
-    amount:
-      selected.price,
-
-    uid:
-      uid || null,
-
-    player_name:
-      playerName,
-
-    contact:
-      contact,
-
-    utr:
-      utr,
-
-    status:
-      "pending"
+    service_name: selected.name,
+    category: selected.cat,
+    amount: selected.price,
+    uid: uid || null,
+    player_name: playerName,
+    contact: contact,
+    utr: utr,
+    status: "pending"
   };
 
+  console.log(
+    "ORDER PAYLOAD:",
+    order
+  );
 
   try {
-
-    /*
-      IMPORTANT:
-      No .select() here.
-
-      Customer only needs to INSERT.
-      We don't give the public client
-      permission to read order rows.
-    */
-
     const { error } =
       await supabaseClient
-
         .from("orders")
-
         .insert([order]);
 
-
     if (error) {
-
       console.error(
-        "Supabase order error:",
+        "SUPABASE ERROR:",
         error
       );
 
-
-      status.textContent =
-        "Order submit nahi hua. Please try again.";
-
+      if (status) {
+        status.textContent =
+          "Order submit nahi hua.";
+      }
 
       alert(
-        "Order submit nahi hua. Supabase error check karo."
+        "SUPABASE ERROR\n\n" +
+        "Message: " +
+        (error.message || "Unknown") +
+        "\n\nDetails: " +
+        (error.details || "None") +
+        "\n\nHint: " +
+        (error.hint || "None") +
+        "\n\nCode: " +
+        (error.code || "Unknown")
       );
-
 
       return;
     }
 
-
-    /* SUCCESS */
-
     console.log(
-      "Order submitted successfully"
+      "ORDER SUBMITTED SUCCESSFULLY"
     );
 
-
-    status.textContent =
-      "Order submitted successfully. Payment is pending verification.";
-
+    if (status) {
+      status.textContent =
+        "Order submitted successfully. Payment is pending verification.";
+    }
 
     alert(
       "Order submitted successfully!"
     );
 
+    if (utrInput) {
+      utrInput.value = "";
+    }
 
-    /* Clear fields */
-
-    utrInput.value = "";
-
-
-  }
-
-  catch (error) {
-
+  } catch (error) {
     console.error(
-      "Unexpected error:",
+      "UNEXPECTED ERROR:",
       error
     );
 
-
-    status.textContent =
-      "Something went wrong. Please try again.";
-
+    if (status) {
+      status.textContent =
+        "Something went wrong.";
+    }
 
     alert(
-      "Something went wrong. Please try again."
+      "Unexpected Error\n\n" +
+      (error.message || error)
     );
 
-  }
-
-
-  finally {
-
+  } finally {
     if (submitButton) {
-
-      submitButton.disabled =
-        false;
-
+      submitButton.disabled = false;
       submitButton.textContent =
         "Submit Payment Details";
     }
