@@ -1,6 +1,6 @@
-/* ================================
-   FFM STORE — FINAL MOBILE STYLE
-   ================================ */
+/* =========================
+   FFM STORE - CLEAN FINAL CSS
+   ========================= */
 
 * {
   box-sizing: border-box;
@@ -16,401 +16,283 @@ body {
   background: #05070b;
   color: #f5f7fb;
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
+    Roboto, Arial, sans-serif;
   overflow-x: hidden;
 }
 
-/* ---------- HEADER ---------- */
+/* =========================
+   HEADER
+   ========================= */
 
-header,
-.navbar,
-.topbar {
+header {
   background: #05070b !important;
-  border-bottom: 1px solid #202630;
+  border-bottom: 1px solid #202630 !important;
 }
 
-.logo,
-.brand,
-.site-logo {
-  font-weight: 800 !important;
-  letter-spacing: -1px;
-  color: #f4f6fa !important;
+.logo {
+  font-weight: 800;
 }
 
-.logo span,
-.brand span,
-.site-logo span {
-  color: #ffb800 !important;
-}
-
-/* ---------- REMOVE UNNECESSARY HEADINGS ---------- */
-
-.store-title,
-.services-title,
-.section-title,
-.store-heading,
-.services-heading {
-  display: none !important;
-}
-
-/* Hide standalone STORE / Services labels where they use common classes */
-section > .eyebrow,
-section > .section-label {
-  display: none !important;
-}
-
-/* ---------- HERO ---------- */
+/* =========================
+   HERO
+   ========================= */
 
 .hero {
-  min-height: auto !important;
-  padding: 75px 42px 70px !important;
+  padding: 70px 42px 65px !important;
   margin: 0 !important;
-  border-bottom: 1px solid #202630;
+  min-height: auto !important;
+  border-bottom: 1px solid #202630 !important;
 }
 
 .hero h1 {
   margin: 18px 0 25px !important;
-  font-size: clamp(48px, 12vw, 88px) !important;
-  line-height: 0.94 !important;
+  font-size: clamp(48px, 11vw, 82px) !important;
+  line-height: 0.95 !important;
   letter-spacing: -4px !important;
   font-weight: 850 !important;
 }
 
 .hero p {
-  max-width: 720px;
   margin: 0 !important;
-  color: #a4adbd !important;
-  font-size: 21px !important;
+  max-width: 760px !important;
+  color: #a5afc0 !important;
+  font-size: 20px !important;
   line-height: 1.55 !important;
 }
 
 .hero .eyebrow {
   color: #ffb800 !important;
   font-weight: 800 !important;
-  letter-spacing: 8px !important;
+  letter-spacing: 7px !important;
   font-size: 15px !important;
-  line-height: 1.5 !important;
 }
 
-/* ---------- SERVICES AREA ---------- */
+/* =========================
+   REMOVE OLD SECTION TITLES
+   ========================= */
 
-.services,
-.store,
-.products,
-.services-section {
-  padding: 65px 42px 80px !important;
-  margin: 0 !important;
+/* Hide the old STORE label */
+#catNav {
+  position: relative;
 }
 
-/* Any heading inside services section gets removed */
-.services > h2,
-.services > h3,
-.store > h2,
-.store > h3,
-.products > h2,
-.products > h3,
-.services-section > h2,
-.services-section > h3 {
-  display: none !important;
-}
-
-/* ---------- SERVICE BUTTON GRID ---------- */
-
-.service-buttons,
-.services-grid,
-.service-grid,
-.category-buttons,
-.categories {
+/* The category navigation itself */
+#catNav {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 14px !important;
+
   width: 100% !important;
-  margin: 0 0 35px !important;
+  max-width: 720px !important;
+
+  margin: 0 auto 42px !important;
+  padding: 0 !important;
 }
 
-/* Buttons */
+/* =========================
+   CATEGORY BUTTONS
+   ========================= */
 
-.service-buttons button,
-.service-buttons a,
-.services-grid button,
-.services-grid a,
-.service-grid button,
-.service-grid a,
-.category-buttons button,
-.category-buttons a,
-.categories button,
-.categories a {
-  width: 100% !important;
-  min-height: 72px !important;
-  padding: 16px 14px !important;
-  margin: 0 !important;
+#catNav button,
+#catNav a {
+  appearance: none !important;
+  -webkit-appearance: none !important;
 
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  text-align: center !important;
 
-  border: 1px solid #293342 !important;
-  border-radius: 18px !important;
+  width: 100% !important;
+  min-height: 68px !important;
+
+  margin: 0 !important;
+  padding: 14px 16px !important;
 
   background: #0c1119 !important;
   color: #aeb8c9 !important;
 
-  font-size: 17px !important;
-  font-weight: 600 !important;
-  line-height: 1.2 !important;
+  border: 1px solid #293342 !important;
+  border-radius: 18px !important;
 
+  font-family: inherit !important;
+  font-size: 16px !important;
+  font-weight: 650 !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+
+  box-shadow: none !important;
   text-decoration: none !important;
-  transition: 0.2s ease !important;
+
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
 
-/* Highlighted service */
-
-.service-buttons button.active,
-.service-buttons a.active,
-.services-grid button.active,
-.services-grid a.active,
-.service-grid button.active,
-.service-grid a.active,
-.category-buttons button.active,
-.category-buttons a.active,
-.categories button.active,
-.categories a.active {
-  background: #ffb800 !important;
+#catNav button:hover,
+#catNav a:hover {
   border-color: #ffb800 !important;
+  color: #f5f7fb !important;
+  transform: translateY(-2px);
+}
+
+/* Active category */
+#catNav button.active,
+#catNav button.selected,
+#catNav a.active,
+#catNav a.selected {
+  background: #ffb800 !important;
   color: #05070b !important;
+  border-color: #ffb800 !important;
   font-weight: 800 !important;
 }
 
-/* Hover */
-
-.service-buttons button:hover,
-.service-buttons a:hover,
-.services-grid button:hover,
-.services-grid a:hover,
-.service-grid button:hover,
-.service-grid a:hover,
-.category-buttons button:hover,
-.category-buttons a:hover,
-.categories button:hover,
-.categories a:hover {
-  border-color: #ffb800 !important;
-  transform: translateY(-1px);
-}
-
-/* ---------- PLAY STORE REDEEM ---------- */
-
-/* If it is the 5th service button, make it full width */
-.service-buttons > :nth-child(5),
-.services-grid > :nth-child(5),
-.service-grid > :nth-child(5),
-.category-buttons > :nth-child(5),
-.categories > :nth-child(5) {
+/* 5th button = Play Store Redeem Code */
+#catNav > :nth-child(5) {
   grid-column: 1 / -1 !important;
+  width: 70% !important;
+  justify-self: center !important;
 }
 
-/* ---------- PRODUCT CARDS ---------- */
+/* =========================
+   SERVICES
+   ========================= */
 
-.products-grid,
-.product-grid,
-.cards,
-.service-cards {
+#serviceGrid {
   display: grid !important;
   grid-template-columns: 1fr !important;
   gap: 18px !important;
+
   width: 100% !important;
+  max-width: 760px !important;
+
+  margin: 0 auto !important;
+  padding: 0 !important;
 }
 
-/* Individual cards */
+/* =========================
+   SERVICE CARDS
+   ========================= */
 
-.product-card,
-.service-card,
-.card {
+#serviceGrid > * {
   width: 100% !important;
-  background: #0b1017 !important;
-  border: 1px solid #273140 !important;
-  border-radius: 26px !important;
-  padding: 28px !important;
   margin: 0 !important;
+  padding: 28px !important;
+
+  background: #0b1017 !important;
+
+  border: 1px solid #273140 !important;
+  border-radius: 25px !important;
+
+  box-shadow: none !important;
 }
 
 /* Card headings */
-
-.product-card h3,
-.service-card h3,
-.card h3 {
+#serviceGrid h2,
+#serviceGrid h3,
+#serviceGrid h4 {
   color: #f5f7fb !important;
-  font-size: 25px !important;
-  margin: 0 0 12px !important;
   font-weight: 800 !important;
 }
 
 /* Card text */
-
-.product-card p,
-.service-card p,
-.card p {
-  color: #9da8ba !important;
-  line-height: 1.5 !important;
+#serviceGrid p {
+  color: #a3adbd !important;
 }
 
 /* Price */
-
-.price,
-.product-price {
+#serviceGrid .price {
   color: #ffb800 !important;
-  font-size: 30px !important;
   font-weight: 850 !important;
 }
 
-/* Buy button */
+/* Buy buttons */
+#serviceGrid button {
+  appearance: none !important;
+  -webkit-appearance: none !important;
 
-.buy-btn,
-.buy-now,
-.product-card button {
   background: #151c27 !important;
-  border: 1px solid #303b4c !important;
   color: #f5f7fb !important;
-  border-radius: 15px !important;
-  padding: 14px 22px !important;
+
+  border: 1px solid #303b4c !important;
+  border-radius: 14px !important;
+
+  font-family: inherit !important;
   font-weight: 750 !important;
 }
 
-/* ---------- QR PAYMENT ---------- */
+/* =========================
+   REMOVE OLD SECTION LABELS
+   ========================= */
 
-.qr-card,
-.payment-card {
-  width: 100% !important;
-  max-width: 700px !important;
-  margin: 20px auto !important;
-  background: #070a0f !important;
-  border: 1px solid #242d3a !important;
-  border-radius: 26px !important;
-  overflow: hidden !important;
+/* Common old headings immediately around category section */
+.store-label,
+.store-title,
+.services-title,
+.section-label,
+.section-title {
+  display: none !important;
 }
 
-.qr-card img,
-.payment-card img,
-.upi-qr,
-.qr-image {
-  display: block !important;
-  width: 100% !important;
-  max-width: 430px !important;
-  height: auto !important;
-  object-fit: contain !important;
-  margin: 0 auto !important;
-}
-
-/* ---------- FORM ---------- */
-
-input,
-textarea,
-select {
-  width: 100% !important;
-  background: #080c12 !important;
-  color: #f5f7fb !important;
-  border: 1px solid #293342 !important;
-  border-radius: 16px !important;
-  padding: 17px !important;
-  outline: none !important;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #ffb800 !important;
-}
-
-/* ---------- SUBMIT ---------- */
-
-button[type="submit"],
-.submit-btn,
-.submit-button {
-  width: 100% !important;
-  min-height: 58px !important;
-  border: none !important;
-  border-radius: 16px !important;
-  background: #ffb800 !important;
-  color: #05070b !important;
-  font-size: 17px !important;
-  font-weight: 850 !important;
-}
-
-/* ---------- MOBILE ---------- */
+/* =========================
+   MOBILE
+   ========================= */
 
 @media (max-width: 600px) {
 
   .hero {
-    padding: 70px 42px 62px !important;
+    padding: 65px 42px 60px !important;
   }
 
   .hero h1 {
-    font-size: 53px !important;
+    font-size: 52px !important;
     letter-spacing: -3px !important;
   }
 
   .hero p {
-    font-size: 20px !important;
+    font-size: 19px !important;
     line-height: 1.55 !important;
   }
 
-  .services,
-  .store,
-  .products,
-  .services-section {
-    padding: 58px 42px 70px !important;
-  }
-
-  .service-buttons,
-  .services-grid,
-  .service-grid,
-  .category-buttons,
-  .categories {
+  #catNav {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 12px !important;
+
+    width: calc(100% - 84px) !important;
+    max-width: none !important;
+
+    margin: 0 auto 36px !important;
   }
 
-  .service-buttons button,
-  .service-buttons a,
-  .services-grid button,
-  .services-grid a,
-  .service-grid button,
-  .service-grid a,
-  .category-buttons button,
-  .category-buttons a,
-  .categories button,
-  .categories a {
-    min-height: 68px !important;
-    padding: 14px 10px !important;
-    font-size: 16px !important;
+  #catNav button,
+  #catNav a {
+    min-height: 64px !important;
+    padding: 12px 9px !important;
+
     border-radius: 17px !important;
+
+    font-size: 15px !important;
   }
 
-  .service-buttons > :nth-child(5),
-  .services-grid > :nth-child(5),
-  .service-grid > :nth-child(5),
-  .category-buttons > :nth-child(5),
-  .categories > :nth-child(5) {
-    grid-column: 1 / -1 !important;
+  #catNav > :nth-child(5) {
+    width: 82% !important;
   }
 
-  .product-card,
-  .service-card,
-  .card {
-    padding: 25px !important;
-    border-radius: 23px !important;
+  #serviceGrid {
+    width: calc(100% - 84px) !important;
+  }
+
+  #serviceGrid > * {
+    padding: 24px !important;
+    border-radius: 22px !important;
   }
 }
 
-/* ---------- VERY SMALL PHONES ---------- */
+/* =========================
+   SMALL PHONES
+   ========================= */
 
 @media (max-width: 380px) {
 
-  .hero,
-  .services,
-  .store,
-  .products,
-  .services-section {
+  .hero {
     padding-left: 25px !important;
     padding-right: 25px !important;
   }
@@ -419,16 +301,13 @@ button[type="submit"],
     font-size: 45px !important;
   }
 
-  .service-buttons button,
-  .service-buttons a,
-  .services-grid button,
-  .services-grid a,
-  .service-grid button,
-  .service-grid a,
-  .category-buttons button,
-  .category-buttons a,
-  .categories button,
-  .categories a {
+  #catNav,
+  #serviceGrid {
+    width: calc(100% - 50px) !important;
+  }
+
+  #catNav button,
+  #catNav a {
     font-size: 14px !important;
   }
 }
