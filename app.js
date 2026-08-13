@@ -1,3 +1,11 @@
+const SUPABASE_URL = "https://wlldnjdgnqnnwtdakkbg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_LRDs-toBVkcc0tfhts_stA_mirTYqPz";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 const UPI = "ffcarderupta@fam";
 
 const categories = [
@@ -79,19 +87,19 @@ const services = [
     price: 1400
   },
 
-  // Free Fire diamond delivery
+  // Free Fire Carding / Diamond Delivery
   {
     cat: "diamonds",
     name: "4,000 Diamonds",
     desc: "Free Fire diamond delivery",
-    meta: "",
+    meta: "Manual delivery",
     price: 1000
   },
   {
     cat: "diamonds",
     name: "10,000 Diamonds",
     desc: "Free Fire diamond delivery",
-    meta: "",
+    meta: "Manual delivery",
     price: 2000
   },
 
@@ -122,8 +130,15 @@ const services = [
 let selected = null;
 let activeCat = categories[0].id;
 
+
+/* =========================
+   PRICE
+========================= */
+
 function priceLabel(service) {
-  if (service.priceText) return service.priceText;
+  if (service.priceText) {
+    return service.priceText;
+  }
 
   if (service.price) {
     return "₹" + service.price.toLocaleString("en-IN");
@@ -132,13 +147,51 @@ function priceLabel(service) {
   return "Custom";
 }
 
+
+/* =========================
+   CATEGORY NAVIGATION
+========================= */
+
+function renderNav() {
+  const nav = document.getElementById("catNav");
+
+  if (!nav) return;
+
+  nav.innerHTML = categories
+    .map(category => `
+      <button
+        class="cat-btn ${category.id === activeCat ? "active" : ""}"
+        data-cat="${category.id}"
+        onclick="selectCategory('${category.id}')">
+        ${category.name}
+      </button>
+    `)
+    .join("");
+}
+
+
+function selectCategory(id) {
+  activeCat = id;
+
+  renderNav();
+  renderCards();
+}
+
+
+/* =========================
+   SERVICE CARDS
+========================= */
+
 function renderCards() {
   const grid = document.getElementById("serviceGrid");
 
   if (!grid) return;
 
   grid.innerHTML = services
-    .map((service, index) => ({ service, index }))
+    .map((service, index) => ({
+      service,
+      index
+    }))
     .filter(({ service }) => service.cat === activeCat)
     .map(({ service, index }) => `
       <article class="card">
@@ -171,7 +224,8 @@ function renderCards() {
     `)
     .join("");
 
-  const tgNote = document.getElementById("tgContact");
+  const tgNote =
+    document.getElementById("tgContact");
 
   if (tgNote) {
     tgNote.innerHTML =
@@ -189,58 +243,52 @@ function renderCards() {
   }
 }
 
-function renderNav() {
-  const nav = document.getElementById("catNav");
 
-  if (!nav) return;
+/* =========================
+   PAGE LOAD
+========================= */
 
-  nav.innerHTML = categories
-    .map(category => `
-      <button
-        class="cat-btn ${
-          category.id === activeCat ? "active" : ""
-        }"
-        data-cat="${category.id}"
-        onclick="selectCategory('${category.id}')">
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
 
-        ${category.name}
+    const grid =
+      document.getElementById("serviceGrid");
 
-      </button>
-    `)
-    .join("");
-}
+    if (!grid) {
+      console.error(
+        "serviceGrid not found"
+      );
+      return;
+    }
 
-function selectCategory(id) {
-  activeCat = id;
-
-  renderNav();
-  renderCards();
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const grid = document.getElementById("serviceGrid");
-
-  if (!grid) {
-    console.error("serviceGrid not found");
-    return;
+    renderNav();
+    renderCards();
   }
+);
 
-  renderNav();
-  renderCards();
-});
+
+/* =========================
+   CHECKOUT
+========================= */
 
 function isUnsubscribe(service) {
-  return service && service.cat === "unsubscribe";
+  return service &&
+    service.cat === "unsubscribe";
 }
+
 
 function openCheckout(index) {
   selected = services[index];
 
-  document.getElementById("checkoutTitle").textContent =
-    selected.name;
+  document.getElementById(
+    "checkoutTitle"
+  ).textContent = selected.name;
 
-  document.getElementById("checkoutPrice").textContent =
-    priceLabel(selected);
+  document.getElementById(
+    "checkoutPrice"
+  ).textContent = priceLabel(selected);
+
 
   const idInput =
     document.getElementById("uid");
@@ -255,15 +303,18 @@ function openCheckout(index) {
     document.getElementById("player");
 
   const playerLabelText =
-    document.getElementById("playerLabelText");
+    document.getElementById(
+      "playerLabelText"
+    );
 
   const playerHelp =
-    document.getElementById("playerHelp");
+    document.getElementById(
+      "playerHelp"
+    );
 
-  /*
-    Unsubscribe:
-    Gmail input
-  */
+
+  /* Gmail service */
+
   if (isUnsubscribe(selected)) {
 
     labelText.textContent =
@@ -287,15 +338,13 @@ function openCheckout(index) {
     );
 
     if (playerField) {
-      playerField.style.display = "none";
+      playerField.style.display =
+        "none";
     }
 
   } else {
 
-    /*
-      All normal game/service orders:
-      Free Fire UID
-    */
+    /* Normal services */
 
     labelText.textContent =
       "Free Fire UID";
@@ -318,18 +367,19 @@ function openCheckout(index) {
     );
 
     if (playerField) {
-      playerField.style.display = "";
+      playerField.style.display =
+        "";
     }
   }
+
 
   if (playerInput) {
     playerInput.value = "";
   }
 
-  /*
-    Diamond delivery:
-    contact number
-  */
+
+  /* Diamond delivery */
+
   if (selected.cat === "diamonds") {
 
     playerLabelText.textContent =
@@ -353,12 +403,12 @@ function openCheckout(index) {
     playerHelp.textContent =
       "Add your contact number so I can contact you about your order.";
 
-  } else if (selected.cat === "redeem") {
+  }
 
-    /*
-      Redeem code:
-      email/contact for delivery
-    */
+
+  /* Play Store Redeem */
+
+  else if (selected.cat === "redeem") {
 
     playerLabelText.textContent =
       "Email / Contact Number";
@@ -381,7 +431,12 @@ function openCheckout(index) {
     playerHelp.textContent =
       "Add your contact details for code delivery.";
 
-  } else {
+  }
+
+
+  /* Other services */
+
+  else {
 
     playerLabelText.textContent =
       "Player name (optional)";
@@ -404,11 +459,13 @@ function openCheckout(index) {
     playerHelp.textContent = "";
   }
 
+
   document
     .getElementById("checkout")
     .classList
     .remove("hidden");
 }
+
 
 function closeCheckout() {
   document
@@ -417,12 +474,21 @@ function closeCheckout() {
     .add("hidden");
 }
 
+
+/* =========================
+   PAYMENT
+========================= */
+
 function showPayment() {
+
   const value =
     document
       .getElementById("uid")
       .value
       .trim();
+
+
+  /* Gmail validation */
 
   if (isUnsubscribe(selected)) {
 
@@ -430,24 +496,40 @@ function showPayment() {
       /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
 
     if (!value) {
-      alert("Gmail address enter karo.");
+
+      alert(
+        "Gmail address enter karo."
+      );
+
       return;
     }
 
     if (!gmailPattern.test(value)) {
+
       alert(
         "Sahi Gmail address enter karo (e.g. yourname@gmail.com)."
       );
+
       return;
     }
 
-  } else {
+  }
+
+
+  /* UID validation */
+
+  else {
 
     if (!value) {
-      alert("Free Fire UID enter karo.");
+
+      alert(
+        "Free Fire UID enter karo."
+      );
+
       return;
     }
   }
+
 
   closeCheckout();
 
@@ -457,6 +539,7 @@ function showPayment() {
     .remove("hidden");
 }
 
+
 function closePayment() {
   document
     .getElementById("payment")
@@ -464,32 +547,243 @@ function closePayment() {
     .add("hidden");
 }
 
-function copyUPI() {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(UPI);
-  }
 
-  alert(
-    "UPI ID copied: " + UPI
-  );
+/* =========================
+   COPY UPI
+========================= */
+
+function copyUPI() {
+
+  if (
+    navigator.clipboard &&
+    navigator.clipboard.writeText
+  ) {
+
+    navigator.clipboard.writeText(UPI)
+      .then(() => {
+
+        alert(
+          "UPI ID copied: " + UPI
+        );
+
+      })
+      .catch(() => {
+
+        alert(
+          "UPI ID: " + UPI
+        );
+
+      });
+
+  } else {
+
+    alert(
+      "UPI ID: " + UPI
+    );
+  }
 }
 
-function submitOrder() {
+
+/* =========================
+   SUBMIT ORDER TO SUPABASE
+========================= */
+
+async function submitOrder() {
+
+  const utrInput =
+    document.getElementById("utr");
+
+  const uidInput =
+    document.getElementById("uid");
+
+  const playerInput =
+    document.getElementById("player");
+
+  const status =
+    document.getElementById("status");
+
+
   const utr =
-    document
-      .getElementById("utr")
-      .value
-      .trim();
+    utrInput.value.trim();
+
+  const uid =
+    uidInput.value.trim();
+
+  const player =
+    playerInput
+      ? playerInput.value.trim()
+      : "";
+
 
   if (!utr) {
+
     alert(
       "Payment ke baad UTR / Transaction ID enter karo."
     );
+
     return;
   }
 
-  document
-    .getElementById("status")
-    .textContent =
-      "Submitted. Your payment is pending manual verification.";
+
+  if (!selected) {
+
+    alert(
+      "Please select a service first."
+    );
+
+    return;
+  }
+
+
+  /*
+    Disable button while submitting
+    to prevent duplicate clicks.
+  */
+
+  const submitButton =
+    document.querySelector(
+      "#payment .full"
+    );
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent =
+      "Submitting...";
+  }
+
+
+  status.textContent =
+    "Submitting your order...";
+
+
+  /*
+    Database fields:
+    service_name
+    category
+    amount
+    uid
+    player_name
+    contact
+    utr
+    status
+  */
+
+  let contact = null;
+  let playerName = null;
+
+
+  if (selected.cat === "diamonds") {
+
+    contact = player || null;
+
+  }
+
+  else if (selected.cat === "redeem") {
+
+    contact = player || null;
+
+  }
+
+  else {
+
+    playerName = player || null;
+
+  }
+
+
+  const order = {
+
+    service_name: selected.name,
+
+    category: selected.cat,
+
+    amount: selected.price,
+
+    uid: uid || null,
+
+    player_name: playerName,
+
+    contact: contact,
+
+    utr: utr,
+
+    status: "pending"
+  };
+
+
+  try {
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("orders")
+      .insert([order])
+      .select();
+
+
+    if (error) {
+
+      console.error(
+        "Supabase order error:",
+        error
+      );
+
+      status.textContent =
+        "Order submit nahi hua. Please try again.";
+
+      alert(
+        "Order submit nahi hua. Supabase error check karo."
+      );
+
+      return;
+    }
+
+
+    console.log(
+      "Order created:",
+      data
+    );
+
+
+    status.textContent =
+      "Order submitted successfully. Payment is pending verification.";
+
+
+    alert(
+      "Order submitted successfully!"
+    );
+
+
+    /*
+      Clear UTR after successful order.
+    */
+
+    utrInput.value = "";
+
+
+  } catch (error) {
+
+    console.error(
+      "Unexpected error:",
+      error
+    );
+
+    status.textContent =
+      "Something went wrong. Please try again.";
+
+    alert(
+      "Something went wrong. Please try again."
+    );
+
+  } finally {
+
+    if (submitButton) {
+
+      submitButton.disabled = false;
+
+      submitButton.textContent =
+        "Submit Payment Details";
+    }
+  }
 }
