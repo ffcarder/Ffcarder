@@ -10,8 +10,8 @@ const supabaseClient =
     SUPABASE_KEY
   );
 
-const UPI = "ffcarderupta@fam";
-
+const UPI =
+  "ffcarderupta@fam";
 
 /* ==========================================
    CATEGORIES
@@ -36,16 +36,11 @@ const categories = [
   }
 ];
 
-
 /* ==========================================
    SERVICES
    ========================================== */
 
 const services = [
-
-  /* =========================
-     UNSUBSCRIBE
-     ========================= */
 
   {
     cat: "unsubscribe",
@@ -62,11 +57,6 @@ const services = [
     meta: "Delivery: 5 minutes",
     price: 1000
   },
-
-
-  /* =========================
-     CRAFTLAND
-     ========================= */
 
   {
     cat: "craftland",
@@ -109,11 +99,6 @@ const services = [
     priceText: "From ₹20"
   },
 
-
-  /* =========================
-     GUILD
-     ========================= */
-
   {
     cat: "guild",
     name: "Guild Level 7",
@@ -130,43 +115,47 @@ const services = [
     price: 1400
   },
 
+  /* ========================================
+     PLAY STORE REDEEM CODES
 
-  /* =========================
-     REDEEM
-     ========================= */
+     PAY ₹300  -> GET ₹400
+     PAY ₹500  -> GET ₹700
+     PAY ₹1000 -> GET ₹1200
+     ======================================== */
 
   {
     cat: "redeem",
     name: "₹400 Play Store Redeem Code",
     desc: "Google Play gift code",
-    meta: "Digital delivery",
-    price: 300
+    meta: "You Pay: ₹300 • You Receive: ₹400",
+    price: 300,
+    receiveAmount: 400
   },
 
   {
     cat: "redeem",
     name: "₹700 Play Store Redeem Code",
     desc: "Google Play gift code",
-    meta: "Digital delivery",
-    price: 500
+    meta: "You Pay: ₹500 • You Receive: ₹700",
+    price: 500,
+    receiveAmount: 700
   },
 
   {
     cat: "redeem",
     name: "₹1,200 Play Store Redeem Code",
     desc: "Google Play gift code",
-    meta: "Digital delivery",
-    price: 1000
+    meta: "You Pay: ₹1,000 • You Receive: ₹1,200",
+    price: 1000,
+    receiveAmount: 1200
   }
 
 ];
-
 
 let selected = null;
 
 let activeCat =
   categories[0].id;
-
 
 /* ==========================================
    SERVICE STOCK KEY MAP
@@ -214,11 +203,14 @@ function getServiceKey(service) {
 
   };
 
-
-  return keyMap[service.name] || null;
-
+  return (
+    keyMap[service.name] ||
+    service.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "")
+  );
 }
-
 
 /* ==========================================
    LOAD SERVICE STOCK
@@ -236,7 +228,6 @@ async function getStockMap() {
         "service_key,is_in_stock"
       );
 
-
   if (error) {
 
     console.error(
@@ -245,37 +236,23 @@ async function getStockMap() {
     );
 
     throw error;
-
   }
 
-
   const stockMap = {};
-
 
   (data || []).forEach(
     row => {
 
       stockMap[
-        String(
-          row.service_key
-        ).trim()
+        row.service_key
       ] =
         row.is_in_stock === true;
 
     }
   );
 
-
-  console.log(
-    "SERVICE STOCK MAP:",
-    stockMap
-  );
-
-
   return stockMap;
-
 }
-
 
 /* ==========================================
    PRICE
@@ -283,14 +260,8 @@ async function getStockMap() {
 
 function priceLabel(service) {
 
-  if (service.priceText) {
-
-    return service.priceText;
-
-  }
-
-
   if (
+    service &&
     service.price !== undefined &&
     service.price !== null
   ) {
@@ -306,11 +277,8 @@ function priceLabel(service) {
 
   }
 
-
   return "Custom";
-
 }
-
 
 /* ==========================================
    CATEGORY NAVIGATION
@@ -323,9 +291,7 @@ function renderNav() {
       "catNav"
     );
 
-
   if (!nav) return;
-
 
   nav.innerHTML =
     categories
@@ -338,8 +304,13 @@ function renderNav() {
                 ? "active"
                 : ""
             }"
-            data-cat="${category.id}"
-            onclick="selectCategory('${category.id}')"
+            data-cat="${escapeHTML(
+              category.id
+            )}"
+            onclick="selectCategory('${escapeHTML(
+              category.id
+            )}')"
+            type="button"
           >
 
             ${escapeHTML(
@@ -351,9 +322,7 @@ function renderNav() {
         `
       )
       .join("");
-
 }
-
 
 function selectCategory(id) {
 
@@ -362,9 +331,86 @@ function selectCategory(id) {
   renderNav();
 
   renderCards();
-
 }
 
+/* ==========================================
+   REDEEM OFFER DISPLAY
+   ========================================== */
+
+function getOfferHTML(service) {
+
+  if (
+    service.cat !== "redeem"
+  ) {
+
+    return "";
+
+  }
+
+  return `
+
+    <div style="
+      margin-top:12px;
+      padding:12px 14px;
+      background:#171d27;
+      border:1px solid #303b4c;
+      border-radius:12px;
+      line-height:1.5;
+    ">
+
+      <div style="
+        color:#aeb8c9;
+        font-size:13px;
+        margin-bottom:4px;
+      ">
+
+        You Pay
+
+      </div>
+
+      <div style="
+        color:#ffb800;
+        font-size:20px;
+        font-weight:900;
+        margin-bottom:7px;
+      ">
+
+        ₹${Number(
+          service.price
+        ).toLocaleString(
+          "en-IN"
+        )}
+
+      </div>
+
+      <div style="
+        color:#aeb8c9;
+        font-size:13px;
+        margin-bottom:3px;
+      ">
+
+        You Receive
+
+      </div>
+
+      <div style="
+        color:#5ee28a;
+        font-size:20px;
+        font-weight:900;
+      ">
+
+        ₹${Number(
+          service.receiveAmount
+        ).toLocaleString(
+          "en-IN"
+        )} Redeem Code
+
+      </div>
+
+    </div>
+
+  `;
+}
 
 /* ==========================================
    SERVICE CARDS
@@ -377,9 +423,7 @@ async function renderCards() {
       "serviceGrid"
     );
 
-
   if (!grid) return;
-
 
   grid.innerHTML = `
 
@@ -396,12 +440,10 @@ async function renderCards() {
 
   `;
 
-
   try {
 
     const stockMap =
       await getStockMap();
-
 
     const filteredServices =
       services
@@ -422,7 +464,6 @@ async function renderCards() {
             activeCat
         );
 
-
     grid.innerHTML =
       filteredServices
         .map(
@@ -436,33 +477,23 @@ async function renderCards() {
                 service
               );
 
+            /*
+              If database contains
+              this service, use its
+              actual stock value.
 
-            let inStock = true;
+              If no row exists,
+              default to IN STOCK.
+            */
 
-
-            if (
-              serviceKey &&
-              Object.prototype.hasOwnProperty.call(
-                stockMap,
+            const inStock =
+              stockMap[
                 serviceKey
-              )
-            ) {
-
-              inStock =
-                stockMap[
-                  serviceKey
-                ];
-
-            }
-
-
-            console.log(
-              "STOCK CHECK:",
-              service.name,
-              serviceKey,
-              inStock
-            );
-
+              ] !== undefined
+                ? stockMap[
+                    serviceKey
+                  ]
+                : true;
 
             /* =========================
                OUT OF STOCK
@@ -475,7 +506,7 @@ async function renderCards() {
                 <article
                   class="card"
                   style="
-                    opacity:0.78;
+                    opacity:0.82;
                     position:relative;
                   "
                 >
@@ -488,7 +519,6 @@ async function renderCards() {
 
                   </h3>
 
-
                   <p>
 
                     ${escapeHTML(
@@ -496,7 +526,6 @@ async function renderCards() {
                     )}
 
                   </p>
-
 
                   ${
                     service.meta
@@ -514,17 +543,28 @@ async function renderCards() {
                       : ""
                   }
 
+                  ${getOfferHTML(
+                    service
+                  )}
 
                   <div class="row">
 
-                    <span class="price">
+                    ${
+                      service.cat ===
+                      "redeem"
+                        ? ""
+                        : `
 
-                      ${priceLabel(
-                        service
-                      )}
+                          <span class="price">
 
-                    </span>
+                            ${priceLabel(
+                              service
+                            )}
 
+                          </span>
+
+                        `
+                    }
 
                     <button
                       class="smallbtn"
@@ -534,8 +574,8 @@ async function renderCards() {
                         cursor:not-allowed;
                         opacity:1;
                         color:#ff7b88;
+                        border-color:#55202a;
                         background:#241014;
-                        border:1px solid #55202a;
                         font-weight:800;
                       "
                     >
@@ -551,7 +591,6 @@ async function renderCards() {
               `;
 
             }
-
 
             /* =========================
                IN STOCK
@@ -571,7 +610,6 @@ async function renderCards() {
 
                 </h3>
 
-
                 <p>
 
                   ${escapeHTML(
@@ -579,7 +617,6 @@ async function renderCards() {
                   )}
 
                 </p>
-
 
                 ${
                   service.meta
@@ -597,17 +634,51 @@ async function renderCards() {
                     : ""
                 }
 
+                ${getOfferHTML(
+                  service
+                )}
 
-                <div class="row">
+                <div
+                  class="row"
+                  style="
+                    align-items:center;
+                    gap:12px;
+                  "
+                >
 
-                  <span class="price">
+                  ${
+                    service.cat ===
+                    "redeem"
+                      ? `
 
-                    ${priceLabel(
-                      service
-                    )}
+                        <span
+                          class="price"
+                          style="
+                            font-size:24px;
+                          "
+                        >
 
-                  </span>
+                          Pay ₹${Number(
+                            service.price
+                          ).toLocaleString(
+                            "en-IN"
+                          )}
 
+                        </span>
+
+                      `
+                      : `
+
+                        <span class="price">
+
+                          ${priceLabel(
+                            service
+                          )}
+
+                        </span>
+
+                      `
+                  }
 
                   <button
                     class="smallbtn"
@@ -629,29 +700,45 @@ async function renderCards() {
         )
         .join("");
 
+    /* ======================================
+       TELEGRAM NOTE
+       ====================================== */
 
     const tgNote =
       document.getElementById(
         "tgContact"
       );
 
-
     if (tgNote) {
 
-      tgNote.innerHTML = "";
+      tgNote.innerHTML =
+        activeCat === "redeem"
+          ? `
+
+            Need help?
+
+            <a
+              href="https://t.me/carderffgupta"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+
+              Contact Admin on Telegram
+
+            </a>
+
+          `
+          : "";
 
     }
 
-
   }
-
   catch (error) {
 
     console.error(
       "SERVICE STOCK ERROR:",
       error
     );
-
 
     grid.innerHTML = `
 
@@ -667,10 +754,7 @@ async function renderCards() {
 
         <br><br>
 
-        ${escapeHTML(
-          error.message ||
-          "Unknown error"
-        )}
+        Please refresh the page.
 
       </div>
 
@@ -679,7 +763,6 @@ async function renderCards() {
   }
 
 }
-
 
 /* ==========================================
    PAGE LOAD
@@ -694,7 +777,6 @@ document.addEventListener(
         "serviceGrid"
       );
 
-
     if (!grid) {
 
       console.error(
@@ -702,9 +784,7 @@ document.addEventListener(
       );
 
       return;
-
     }
-
 
     renderNav();
 
@@ -714,7 +794,6 @@ document.addEventListener(
 
   }
 );
-
 
 /* ==========================================
    SERVICE HELPERS
@@ -732,7 +811,6 @@ function isUnsubscribe(
 
 }
 
-
 /* ==========================================
    CHECKOUT
    ========================================== */
@@ -742,18 +820,15 @@ function openCheckout(index) {
   selected =
     services[index];
 
-
   const checkoutTitle =
     document.getElementById(
       "checkoutTitle"
     );
 
-
   const checkoutPrice =
     document.getElementById(
       "checkoutPrice"
     );
-
 
   if (checkoutTitle) {
 
@@ -762,52 +837,66 @@ function openCheckout(index) {
 
   }
 
-
   if (checkoutPrice) {
 
-    checkoutPrice.textContent =
-      priceLabel(
-        selected
-      );
+    if (
+      selected.cat ===
+      "redeem"
+    ) {
+
+      checkoutPrice.textContent =
+        "You Pay: " +
+        priceLabel(
+          selected
+        ) +
+        " • You Receive: ₹" +
+        Number(
+          selected.receiveAmount
+        ).toLocaleString(
+          "en-IN"
+        );
+
+    }
+    else {
+
+      checkoutPrice.textContent =
+        priceLabel(
+          selected
+        );
+
+    }
 
   }
-
 
   const idInput =
     document.getElementById(
       "uid"
     );
 
-
   const labelText =
     document.getElementById(
       "uidLabelText"
     );
-
 
   const playerField =
     document.getElementById(
       "playerField"
     );
 
-
   const playerInput =
     document.getElementById(
       "player"
     );
-
 
   const playerLabelText =
     document.getElementById(
       "playerLabelText"
     );
 
-
   const playerHelp =
     document.getElementById(
       "playerHelp"
     );
-
 
   if (
     isUnsubscribe(
@@ -821,7 +910,6 @@ function openCheckout(index) {
         "Gmail address";
 
     }
-
 
     if (idInput) {
 
@@ -844,7 +932,6 @@ function openCheckout(index) {
 
     }
 
-
     if (playerField) {
 
       playerField.style.display =
@@ -853,7 +940,6 @@ function openCheckout(index) {
     }
 
   }
-
   else {
 
     if (labelText) {
@@ -862,7 +948,6 @@ function openCheckout(index) {
         "Free Fire UID";
 
     }
-
 
     if (idInput) {
 
@@ -885,7 +970,6 @@ function openCheckout(index) {
 
     }
 
-
     if (playerField) {
 
       playerField.style.display =
@@ -895,22 +979,46 @@ function openCheckout(index) {
 
   }
 
-
   if (playerInput) {
 
     playerInput.value = "";
 
   }
 
-
-  /* =========================
-     REDEEM CODE
-     ========================= */
+  /* ========================================
+     REDEEM
+     ======================================== */
 
   if (
     selected.cat ===
     "redeem"
   ) {
+
+    if (labelText) {
+
+      labelText.textContent =
+        "Free Fire UID";
+
+    }
+
+    if (idInput) {
+
+      idInput.setAttribute(
+        "type",
+        "text"
+      );
+
+      idInput.setAttribute(
+        "inputmode",
+        "text"
+      );
+
+      idInput.setAttribute(
+        "placeholder",
+        "Enter UID"
+      );
+
+    }
 
     if (playerLabelText) {
 
@@ -918,7 +1026,6 @@ function openCheckout(index) {
         "Email / Contact Number";
 
     }
-
 
     if (playerInput) {
 
@@ -939,17 +1046,23 @@ function openCheckout(index) {
 
     }
 
-
     if (playerHelp) {
 
       playerHelp.textContent =
-        "Add your contact details for code delivery.";
+        "Add your email or contact number for redeem code delivery.";
 
     }
 
   }
 
-  else {
+  /* ========================================
+     DIAMONDS REMOVED
+     ======================================== */
+
+  else if (
+    selected.cat ===
+    "guild"
+  ) {
 
     if (playerLabelText) {
 
@@ -957,7 +1070,6 @@ function openCheckout(index) {
         "Player name (optional)";
 
     }
-
 
     if (playerInput) {
 
@@ -978,6 +1090,42 @@ function openCheckout(index) {
 
     }
 
+    if (playerHelp) {
+
+      playerHelp.textContent =
+        "";
+
+    }
+
+  }
+
+  else {
+
+    if (playerLabelText) {
+
+      playerLabelText.textContent =
+        "Player name (optional)";
+
+    }
+
+    if (playerInput) {
+
+      playerInput.setAttribute(
+        "type",
+        "text"
+      );
+
+      playerInput.setAttribute(
+        "inputmode",
+        "text"
+      );
+
+      playerInput.setAttribute(
+        "placeholder",
+        "Enter player name"
+      );
+
+    }
 
     if (playerHelp) {
 
@@ -988,12 +1136,10 @@ function openCheckout(index) {
 
   }
 
-
   const checkout =
     document.getElementById(
       "checkout"
     );
-
 
   if (checkout) {
 
@@ -1005,6 +1151,9 @@ function openCheckout(index) {
 
 }
 
+/* ==========================================
+   CLOSE CHECKOUT
+   ========================================== */
 
 function closeCheckout() {
 
@@ -1012,7 +1161,6 @@ function closeCheckout() {
     document.getElementById(
       "checkout"
     );
-
 
   if (checkout) {
 
@@ -1023,7 +1171,6 @@ function closeCheckout() {
   }
 
 }
-
 
 /* ==========================================
    PAYMENT
@@ -1041,18 +1188,15 @@ function showPayment() {
 
   }
 
-
   const uidElement =
     document.getElementById(
       "uid"
     );
 
-
   const value =
     uidElement
       ? uidElement.value.trim()
       : "";
-
 
   if (
     isUnsubscribe(
@@ -1063,7 +1207,6 @@ function showPayment() {
     const gmailPattern =
       /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
 
-
     if (!value) {
 
       alert(
@@ -1073,7 +1216,6 @@ function showPayment() {
       return;
 
     }
-
 
     if (
       !gmailPattern.test(
@@ -1090,7 +1232,6 @@ function showPayment() {
     }
 
   }
-
   else {
 
     if (!value) {
@@ -1105,15 +1246,12 @@ function showPayment() {
 
   }
 
-
   closeCheckout();
-
 
   const payment =
     document.getElementById(
       "payment"
     );
-
 
   if (payment) {
 
@@ -1125,6 +1263,9 @@ function showPayment() {
 
 }
 
+/* ==========================================
+   CLOSE PAYMENT
+   ========================================== */
 
 function closePayment() {
 
@@ -1132,7 +1273,6 @@ function closePayment() {
     document.getElementById(
       "payment"
     );
-
 
   if (payment) {
 
@@ -1143,7 +1283,6 @@ function closePayment() {
   }
 
 }
-
 
 /* ==========================================
    COPY UPI
@@ -1182,7 +1321,6 @@ function copyUPI() {
       );
 
   }
-
   else {
 
     alert(
@@ -1193,7 +1331,6 @@ function copyUPI() {
   }
 
 }
-
 
 /* ==========================================
    SUBMIT ORDER
@@ -1206,42 +1343,35 @@ async function submitOrder() {
       "utr"
     );
 
-
   const uidInput =
     document.getElementById(
       "uid"
     );
-
 
   const playerInput =
     document.getElementById(
       "player"
     );
 
-
   const status =
     document.getElementById(
       "status"
     );
-
 
   const utr =
     utrInput
       ? utrInput.value.trim()
       : "";
 
-
   const uid =
     uidInput
       ? uidInput.value.trim()
       : "";
 
-
   const player =
     playerInput
       ? playerInput.value.trim()
       : "";
-
 
   if (!utr) {
 
@@ -1253,7 +1383,6 @@ async function submitOrder() {
 
   }
 
-
   if (!selected) {
 
     alert(
@@ -1264,43 +1393,39 @@ async function submitOrder() {
 
   }
 
-
-  /* FINAL STOCK CHECK */
+  /* ========================================
+     CHECK STOCK AGAIN
+     ======================================== */
 
   try {
 
     const stockMap =
       await getStockMap();
 
-
     const serviceKey =
       getServiceKey(
         selected
       );
 
-
     if (
-      serviceKey &&
-      stockMap[serviceKey] === false
+      stockMap[
+        serviceKey
+      ] === false
     ) {
 
       alert(
         "Ye service abhi Out of Stock hai."
       );
 
-
       closePayment();
 
-
       await renderCards();
-
 
       return;
 
     }
 
   }
-
   catch (error) {
 
     console.error(
@@ -1310,12 +1435,10 @@ async function submitOrder() {
 
   }
 
-
   const submitButton =
     document.querySelector(
       "#payment .full"
     );
-
 
   if (submitButton) {
 
@@ -1327,7 +1450,6 @@ async function submitOrder() {
 
   }
 
-
   if (status) {
 
     status.textContent =
@@ -1335,11 +1457,16 @@ async function submitOrder() {
 
   }
 
+  let contact =
+    null;
 
-  let contact = null;
+  let playerName =
+    null;
 
-  let playerName = null;
-
+  /*
+    Redeem:
+    player field = contact
+  */
 
   if (
     selected.cat ===
@@ -1350,7 +1477,6 @@ async function submitOrder() {
       player || null;
 
   }
-
   else {
 
     playerName =
@@ -1358,8 +1484,11 @@ async function submitOrder() {
 
   }
 
-
   try {
+
+    console.log(
+      "Creating order through RPC..."
+    );
 
     const {
       data,
@@ -1368,7 +1497,6 @@ async function submitOrder() {
       await supabaseClient.rpc(
         "create_order",
         {
-
           p_service_name:
             selected.name,
 
@@ -1389,10 +1517,8 @@ async function submitOrder() {
 
           p_utr:
             utr
-
         }
       );
-
 
     if (error) {
 
@@ -1401,14 +1527,12 @@ async function submitOrder() {
         error
       );
 
-
       if (status) {
 
         status.textContent =
           "Order submit nahi hua.";
 
       }
-
 
       alert(
         "SUPABASE ERROR\n\n" +
@@ -1424,11 +1548,9 @@ async function submitOrder() {
         )
       );
 
-
       return;
 
     }
-
 
     if (
       data === null ||
@@ -1441,12 +1563,10 @@ async function submitOrder() {
 
     }
 
-
     const orderId =
       Number(
         data
       );
-
 
     if (
       !Number.isFinite(
@@ -1460,21 +1580,17 @@ async function submitOrder() {
 
     }
 
-
     console.log(
       "ORDER CREATED:",
       orderId
     );
 
-
     localStorage.setItem(
       "ffm_last_order",
       JSON.stringify({
-        id:
-          orderId
+        id: orderId
       })
     );
-
 
     if (status) {
 
@@ -1482,7 +1598,6 @@ async function submitOrder() {
         "Order submitted successfully. Payment is pending verification.";
 
     }
-
 
     alert(
       "Order submitted successfully!\n\n" +
@@ -1492,22 +1607,18 @@ async function submitOrder() {
       "Save this Order ID to track your order."
     );
 
-
     if (utrInput) {
 
       utrInput.value = "";
 
     }
 
-
     closePayment();
-
 
     const trackInput =
       document.getElementById(
         "trackOrderId"
       );
-
 
     if (trackInput) {
 
@@ -1516,12 +1627,10 @@ async function submitOrder() {
 
     }
 
-
     const tracker =
       document.getElementById(
         "orderTracker"
       );
-
 
     if (tracker) {
 
@@ -1534,7 +1643,6 @@ async function submitOrder() {
 
     }
 
-
     await new Promise(
       resolve =>
         setTimeout(
@@ -1543,11 +1651,9 @@ async function submitOrder() {
         )
     );
 
-
     await trackOrder();
 
   }
-
   catch (error) {
 
     console.error(
@@ -1555,14 +1661,12 @@ async function submitOrder() {
       error
     );
 
-
     if (status) {
 
       status.textContent =
         "Order submit nahi hua.";
 
     }
-
 
     alert(
       "ORDER ERROR\n\n" +
@@ -1575,7 +1679,6 @@ async function submitOrder() {
     );
 
   }
-
   finally {
 
     if (submitButton) {
@@ -1591,7 +1694,6 @@ async function submitOrder() {
   }
 
 }
-
 
 /* ==========================================
    ORDER TRACKING UI
@@ -1609,12 +1711,10 @@ function createTrackOrderUI() {
 
   }
 
-
   const servicesSection =
     document.getElementById(
       "services"
     );
-
 
   if (!servicesSection) {
 
@@ -1622,26 +1722,24 @@ function createTrackOrderUI() {
 
   }
 
-
   const tracker =
     document.createElement(
       "section"
     );
 
-
   tracker.id =
     "orderTracker";
 
-
   tracker.style.cssText = `
+
     max-width:760px;
     margin:40px auto 0;
     padding:22px;
     background:#0b1017;
     border:1px solid #273140;
     border-radius:20px;
-  `;
 
+  `;
 
   tracker.innerHTML = `
 
@@ -1657,7 +1755,6 @@ function createTrackOrderUI() {
 
     </div>
 
-
     <h2 style="
       margin:0 0 8px;
       color:#f5f7fb;
@@ -1667,7 +1764,6 @@ function createTrackOrderUI() {
       Track your order
 
     </h2>
-
 
     <p style="
       margin:0 0 18px;
@@ -1680,7 +1776,6 @@ function createTrackOrderUI() {
       the latest order status.
 
     </p>
-
 
     <div style="
       display:grid;
@@ -1705,7 +1800,6 @@ function createTrackOrderUI() {
         "
       >
 
-
       <button
         id="trackButton"
         type="button"
@@ -1727,7 +1821,6 @@ function createTrackOrderUI() {
 
     </div>
 
-
     <div
       id="orderResult"
       style="
@@ -1739,17 +1832,14 @@ function createTrackOrderUI() {
 
   `;
 
-
   servicesSection.appendChild(
     tracker
   );
-
 
   const trackButton =
     document.getElementById(
       "trackButton"
     );
-
 
   if (trackButton) {
 
@@ -1760,7 +1850,6 @@ function createTrackOrderUI() {
 
   }
 
-
   /* RESTORE LAST ORDER */
 
   try {
@@ -1770,14 +1859,12 @@ function createTrackOrderUI() {
         "ffm_last_order"
       );
 
-
     if (saved) {
 
       const parsed =
         JSON.parse(
           saved
         );
-
 
       if (
         parsed &&
@@ -1788,7 +1875,6 @@ function createTrackOrderUI() {
           document.getElementById(
             "trackOrderId"
           );
-
 
         if (input) {
 
@@ -1802,7 +1888,6 @@ function createTrackOrderUI() {
     }
 
   }
-
   catch (error) {
 
     console.error(
@@ -1813,7 +1898,6 @@ function createTrackOrderUI() {
   }
 
 }
-
 
 /* ==========================================
    TRACK ORDER
@@ -1826,18 +1910,15 @@ async function trackOrder() {
       "trackOrderId"
     );
 
-
   const result =
     document.getElementById(
       "orderResult"
     );
 
-
   const button =
     document.getElementById(
       "trackButton"
     );
-
 
   if (!result) {
 
@@ -1845,12 +1926,10 @@ async function trackOrder() {
 
   }
 
-
   const orderId =
     idInput
       ? idInput.value.trim()
       : "";
-
 
   if (!orderId) {
 
@@ -1874,7 +1953,6 @@ async function trackOrder() {
     return;
 
   }
-
 
   if (
     !/^[0-9]+$/.test(
@@ -1903,7 +1981,6 @@ async function trackOrder() {
 
   }
 
-
   if (button) {
 
     button.disabled =
@@ -1913,7 +1990,6 @@ async function trackOrder() {
       "Checking...";
 
   }
-
 
   result.innerHTML = `
 
@@ -1928,7 +2004,6 @@ async function trackOrder() {
     </div>
 
   `;
-
 
   try {
 
@@ -1946,7 +2021,6 @@ async function trackOrder() {
         }
       );
 
-
     if (error) {
 
       console.error(
@@ -1957,7 +2031,6 @@ async function trackOrder() {
       throw error;
 
     }
-
 
     if (
       !data ||
@@ -1977,6 +2050,7 @@ async function trackOrder() {
         ">
 
           Order not found.<br>
+
           Please check your Order ID.
 
         </div>
@@ -1987,24 +2061,20 @@ async function trackOrder() {
 
     }
 
-
     const order =
       data[0];
-
 
     renderOrderStatus(
       order
     );
 
   }
-
   catch (error) {
 
     console.error(
       "ORDER TRACKING ERROR:",
       error
     );
-
 
     result.innerHTML = `
 
@@ -2034,7 +2104,6 @@ async function trackOrder() {
     `;
 
   }
-
   finally {
 
     if (button) {
@@ -2051,7 +2120,6 @@ async function trackOrder() {
 
 }
 
-
 /* ==========================================
    RENDER ORDER STATUS
    ========================================== */
@@ -2065,13 +2133,11 @@ function renderOrderStatus(
       "orderResult"
     );
 
-
   if (!result) {
 
     return;
 
   }
-
 
   const status =
     String(
@@ -2079,30 +2145,23 @@ function renderOrderStatus(
       "pending"
     ).toLowerCase();
 
-
   let title =
     "Payment Verification Pending";
-
 
   let message =
     "Your payment is waiting for manual verification.";
 
-
   let icon =
     "🟡";
-
 
   let border =
     "#5b4610";
 
-
   let background =
     "#241b08";
 
-
   let color =
     "#ffcc4d";
-
 
   /* VERIFIED */
 
@@ -2114,28 +2173,22 @@ function renderOrderStatus(
     title =
       "Payment Verified";
 
-
     message =
       "Your payment has been verified. Your order is being processed.";
-
 
     icon =
       "🔵";
 
-
     border =
       "#173c5c";
 
-
     background =
       "#0c1c2a";
-
 
     color =
       "#66bfff";
 
   }
-
 
   /* COMPLETED */
 
@@ -2147,28 +2200,22 @@ function renderOrderStatus(
     title =
       "Order Successful";
 
-
     message =
       "Your order has been completed successfully.";
-
 
     icon =
       "🟢";
 
-
     border =
       "#164b2b";
 
-
     background =
       "#0b2115";
-
 
     color =
       "#5ee28a";
 
   }
-
 
   /* REJECTED */
 
@@ -2180,28 +2227,22 @@ function renderOrderStatus(
     title =
       "Order Failed";
 
-
     message =
       "Your order/payment was rejected. Please contact the admin if you think this is a mistake.";
-
 
     icon =
       "🔴";
 
-
     border =
       "#55202a";
 
-
     background =
       "#241014";
-
 
     color =
       "#ff7b88";
 
   }
-
 
   result.innerHTML = `
 
@@ -2211,7 +2252,6 @@ function renderOrderStatus(
       background:${background};
       border:1px solid ${border};
     ">
-
 
       <div style="
         color:${color};
@@ -2225,7 +2265,6 @@ function renderOrderStatus(
 
       </div>
 
-
       <div style="
         color:#aeb8c9;
         font-size:14px;
@@ -2233,10 +2272,11 @@ function renderOrderStatus(
         margin-bottom:12px;
       ">
 
-        ${message}
+        ${escapeHTML(
+          message
+        )}
 
       </div>
-
 
       <div style="
         color:#7f899a;
@@ -2256,9 +2296,7 @@ function renderOrderStatus(
 
         </strong>
 
-
         <br>
-
 
         Service:
 
@@ -2273,9 +2311,7 @@ function renderOrderStatus(
 
         </strong>
 
-
         <br>
-
 
         Amount:
 
@@ -2300,7 +2336,6 @@ function renderOrderStatus(
 
 }
 
-
 /* ==========================================
    HTML ESCAPE
    ========================================== */
@@ -2312,27 +2347,22 @@ function escapeHTML(
   return String(
     value
   )
-
     .replace(
       /&/g,
       "&amp;"
     )
-
     .replace(
       /</g,
       "&lt;"
     )
-
     .replace(
       />/g,
       "&gt;"
     )
-
     .replace(
       /"/g,
       "&quot;"
     )
-
     .replace(
       /'/g,
       "&#039;"
