@@ -37,7 +37,15 @@ const categories = [
 ];
 
 
+/* ==========================================
+   SERVICES
+   ========================================== */
+
 const services = [
+
+  /* =========================
+     UNSUBSCRIBE
+     ========================= */
 
   {
     cat: "unsubscribe",
@@ -55,6 +63,10 @@ const services = [
     price: 1000
   },
 
+
+  /* =========================
+     CRAFTLAND
+     ========================= */
 
   {
     cat: "craftland",
@@ -98,6 +110,10 @@ const services = [
   },
 
 
+  /* =========================
+     GUILD
+     ========================= */
+
   {
     cat: "guild",
     name: "Guild Level 7",
@@ -115,17 +131,21 @@ const services = [
   },
 
 
+  /* =========================
+     REDEEM
+     ========================= */
+
   {
     cat: "redeem",
-    name: "₹100 Play Store Redeem Code",
+    name: "₹400 Play Store Redeem Code",
     desc: "Google Play gift code",
     meta: "Digital delivery",
-    price: 100
+    price: 300
   },
 
   {
     cat: "redeem",
-    name: "₹500 Play Store Redeem Code",
+    name: "₹700 Play Store Redeem Code",
     desc: "Google Play gift code",
     meta: "Digital delivery",
     price: 500
@@ -133,7 +153,7 @@ const services = [
 
   {
     cat: "redeem",
-    name: "₹1,000 Play Store Redeem Code",
+    name: "₹1,200 Play Store Redeem Code",
     desc: "Google Play gift code",
     meta: "Digital delivery",
     price: 1000
@@ -183,14 +203,14 @@ function getServiceKey(service) {
     "Guild Region Top 15":
       "guild_region_top_15",
 
-    "₹100 Play Store Redeem Code":
-      "redeem_100",
+    "₹400 Play Store Redeem Code":
+      "redeem_400",
 
-    "₹500 Play Store Redeem Code":
-      "redeem_500",
+    "₹700 Play Store Redeem Code":
+      "redeem_700",
 
-    "₹1,000 Play Store Redeem Code":
-      "redeem_1000"
+    "₹1,200 Play Store Redeem Code":
+      "redeem_1200"
 
   };
 
@@ -883,9 +903,9 @@ function openCheckout(index) {
   }
 
 
-  /*
-    Redeem code contact field
-  */
+  /* =========================
+     REDEEM CODE
+     ========================= */
 
   if (
     selected.cat ===
@@ -1245,9 +1265,7 @@ async function submitOrder() {
   }
 
 
-  /*
-    Final stock check before creating order.
-  */
+  /* FINAL STOCK CHECK */
 
   try {
 
@@ -1441,6 +1459,12 @@ async function submitOrder() {
       );
 
     }
+
+
+    console.log(
+      "ORDER CREATED:",
+      orderId
+    );
 
 
     localStorage.setItem(
@@ -1737,6 +1761,8 @@ function createTrackOrderUI() {
   }
 
 
+  /* RESTORE LAST ORDER */
+
   try {
 
     const saved =
@@ -1923,6 +1949,11 @@ async function trackOrder() {
 
     if (error) {
 
+      console.error(
+        "TRACK ERROR:",
+        error
+      );
+
       throw error;
 
     }
@@ -1957,8 +1988,12 @@ async function trackOrder() {
     }
 
 
+    const order =
+      data[0];
+
+
     renderOrderStatus(
-      data[0]
+      order
     );
 
   }
@@ -2048,21 +2083,28 @@ function renderOrderStatus(
   let title =
     "Payment Verification Pending";
 
+
   let message =
     "Your payment is waiting for manual verification.";
+
 
   let icon =
     "🟡";
 
+
   let border =
     "#5b4610";
+
 
   let background =
     "#241b08";
 
+
   let color =
     "#ffcc4d";
 
+
+  /* VERIFIED */
 
   if (
     status ===
@@ -2072,23 +2114,30 @@ function renderOrderStatus(
     title =
       "Payment Verified";
 
+
     message =
       "Your payment has been verified. Your order is being processed.";
+
 
     icon =
       "🔵";
 
+
     border =
       "#173c5c";
 
+
     background =
       "#0c1c2a";
+
 
     color =
       "#66bfff";
 
   }
 
+
+  /* COMPLETED */
 
   if (
     status ===
@@ -2098,23 +2147,30 @@ function renderOrderStatus(
     title =
       "Order Successful";
 
+
     message =
       "Your order has been completed successfully.";
+
 
     icon =
       "🟢";
 
+
     border =
       "#164b2b";
 
+
     background =
       "#0b2115";
+
 
     color =
       "#5ee28a";
 
   }
 
+
+  /* REJECTED */
 
   if (
     status ===
@@ -2124,17 +2180,22 @@ function renderOrderStatus(
     title =
       "Order Failed";
 
+
     message =
       "Your order/payment was rejected. Please contact the admin if you think this is a mistake.";
+
 
     icon =
       "🔴";
 
+
     border =
       "#55202a";
 
+
     background =
       "#241014";
+
 
     color =
       "#ff7b88";
