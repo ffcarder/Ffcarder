@@ -31,21 +31,14 @@ const categories = [
     name: "Guild Glory"
   },
   {
-    id: "diamonds",
-    name: "Free Fire Carding"
-  },
-  {
     id: "redeem",
     name: "Play Store Redeem Code"
   }
 ];
 
 
-/* ==========================================
-   SERVICES
-   ========================================== */
-
 const services = [
+
   {
     cat: "unsubscribe",
     name: "Single Unsubscribe",
@@ -53,6 +46,7 @@ const services = [
     meta: "Delivery: 5 minutes",
     price: 600
   },
+
   {
     cat: "unsubscribe",
     name: "Double Unsubscribe",
@@ -61,6 +55,7 @@ const services = [
     price: 1000
   },
 
+
   {
     cat: "craftland",
     name: "Craftland Followers",
@@ -68,6 +63,7 @@ const services = [
     meta: "Limit 200/day • 6hr–24hr",
     price: 25
   },
+
   {
     cat: "craftland",
     name: "Craftland Followers (Fast Plan)",
@@ -75,6 +71,7 @@ const services = [
     meta: "Limit 25k/day • 5min–2hr",
     price: 100
   },
+
   {
     cat: "craftland",
     name: "Craftland Map Likes",
@@ -82,6 +79,7 @@ const services = [
     meta: "Limit 2k/day • 3hr–15hr",
     price: 50
   },
+
   {
     cat: "craftland",
     name: "Craftland Map Stars",
@@ -89,6 +87,7 @@ const services = [
     meta: "Limit 150/day • 6hr–24hr",
     price: 30
   },
+
   {
     cat: "craftland",
     name: "Craftland Level Up",
@@ -98,6 +97,7 @@ const services = [
     priceText: "From ₹20"
   },
 
+
   {
     cat: "guild",
     name: "Guild Level 7",
@@ -105,6 +105,7 @@ const services = [
     meta: "Delivery: 3 days",
     price: 500
   },
+
   {
     cat: "guild",
     name: "Guild Region Top 15",
@@ -113,20 +114,6 @@ const services = [
     price: 1400
   },
 
-  {
-    cat: "diamonds",
-    name: "4,000 Diamonds",
-    desc: "Free Fire diamond delivery",
-    meta: "Manual delivery",
-    price: 1000
-  },
-  {
-    cat: "diamonds",
-    name: "10,000 Diamonds",
-    desc: "Free Fire diamond delivery",
-    meta: "Manual delivery",
-    price: 2000
-  },
 
   {
     cat: "redeem",
@@ -135,6 +122,7 @@ const services = [
     meta: "Digital delivery",
     price: 100
   },
+
   {
     cat: "redeem",
     name: "₹500 Play Store Redeem Code",
@@ -142,6 +130,7 @@ const services = [
     meta: "Digital delivery",
     price: 500
   },
+
   {
     cat: "redeem",
     name: "₹1,000 Play Store Redeem Code",
@@ -149,15 +138,18 @@ const services = [
     meta: "Digital delivery",
     price: 1000
   }
+
 ];
 
 
 let selected = null;
-let activeCat = categories[0].id;
+
+let activeCat =
+  categories[0].id;
 
 
 /* ==========================================
-   SERVICE KEY MAP
+   SERVICE STOCK KEY MAP
    ========================================== */
 
 function getServiceKey(service) {
@@ -191,12 +183,6 @@ function getServiceKey(service) {
     "Guild Region Top 15":
       "guild_region_top_15",
 
-    "4,000 Diamonds":
-      "diamonds_4000",
-
-    "10,000 Diamonds":
-      "diamonds_10000",
-
     "₹100 Play Store Redeem Code":
       "redeem_100",
 
@@ -210,11 +196,12 @@ function getServiceKey(service) {
 
 
   return keyMap[service.name] || null;
+
 }
 
 
 /* ==========================================
-   LOAD STOCK
+   LOAD SERVICE STOCK
    ========================================== */
 
 async function getStockMap() {
@@ -238,6 +225,7 @@ async function getStockMap() {
     );
 
     throw error;
+
   }
 
 
@@ -265,6 +253,7 @@ async function getStockMap() {
 
 
   return stockMap;
+
 }
 
 
@@ -299,11 +288,12 @@ function priceLabel(service) {
 
 
   return "Custom";
+
 }
 
 
 /* ==========================================
-   CATEGORY NAV
+   CATEGORY NAVIGATION
    ========================================== */
 
 function renderNav() {
@@ -341,6 +331,7 @@ function renderNav() {
         `
       )
       .join("");
+
 }
 
 
@@ -351,11 +342,12 @@ function selectCategory(id) {
   renderNav();
 
   renderCards();
+
 }
 
 
 /* ==========================================
-   SERVICE CARDS + STOCK
+   SERVICE CARDS
    ========================================== */
 
 async function renderCards() {
@@ -391,7 +383,7 @@ async function renderCards() {
       await getStockMap();
 
 
-    const filtered =
+    const filteredServices =
       services
         .map(
           (
@@ -412,7 +404,7 @@ async function renderCards() {
 
 
     grid.innerHTML =
-      filtered
+      filteredServices
         .map(
           ({
             service,
@@ -452,10 +444,9 @@ async function renderCards() {
             );
 
 
-            /*
-              OUT OF STOCK
-              Card remains visible.
-            */
+            /* =========================
+               OUT OF STOCK
+               ========================= */
 
             if (!inStock) {
 
@@ -470,27 +461,35 @@ async function renderCards() {
                 >
 
                   <h3>
+
                     ${escapeHTML(
                       service.name
                     )}
+
                   </h3>
 
 
                   <p>
+
                     ${escapeHTML(
                       service.desc
                     )}
+
                   </p>
 
 
                   ${
                     service.meta
                       ? `
+
                         <p class="meta">
+
                           ${escapeHTML(
                             service.meta
                           )}
+
                         </p>
+
                       `
                       : ""
                   }
@@ -499,9 +498,11 @@ async function renderCards() {
                   <div class="row">
 
                     <span class="price">
+
                       ${priceLabel(
                         service
                       )}
+
                     </span>
 
 
@@ -532,9 +533,9 @@ async function renderCards() {
             }
 
 
-            /*
-              IN STOCK
-            */
+            /* =========================
+               IN STOCK
+               ========================= */
 
             return `
 
@@ -543,27 +544,35 @@ async function renderCards() {
               >
 
                 <h3>
+
                   ${escapeHTML(
                     service.name
                   )}
+
                 </h3>
 
 
                 <p>
+
                   ${escapeHTML(
                     service.desc
                   )}
+
                 </p>
 
 
                 ${
                   service.meta
                     ? `
+
                       <p class="meta">
+
                         ${escapeHTML(
                           service.meta
                         )}
+
                       </p>
+
                     `
                     : ""
                 }
@@ -572,9 +581,11 @@ async function renderCards() {
                 <div class="row">
 
                   <span class="price">
+
                     ${priceLabel(
                       service
                     )}
+
                   </span>
 
 
@@ -607,28 +618,10 @@ async function renderCards() {
 
     if (tgNote) {
 
-      tgNote.innerHTML =
-        activeCat === "diamonds"
-
-          ? `
-
-            Need help?
-
-            <a
-              href="https://t.me/carderffgupta"
-              target="_blank"
-              rel="noopener"
-            >
-
-              Contact Admin on Telegram
-
-            </a>
-
-          `
-
-          : "";
+      tgNote.innerHTML = "";
 
     }
+
 
   }
 
@@ -644,11 +637,10 @@ async function renderCards() {
 
       <div style="
         padding:20px;
-        border-radius:14px;
+        color:#ff7b88;
         background:#241014;
         border:1px solid #55202a;
-        color:#ff7b88;
-        line-height:1.5;
+        border-radius:14px;
       ">
 
         Services load nahi ho paayi.
@@ -665,6 +657,7 @@ async function renderCards() {
     `;
 
   }
+
 }
 
 
@@ -704,16 +697,19 @@ document.addEventListener(
 
 
 /* ==========================================
-   HELPERS
+   SERVICE HELPERS
    ========================================== */
 
-function isUnsubscribe(service) {
+function isUnsubscribe(
+  service
+) {
 
   return (
     service &&
     service.cat ===
       "unsubscribe"
   );
+
 }
 
 
@@ -887,49 +883,11 @@ function openCheckout(index) {
   }
 
 
+  /*
+    Redeem code contact field
+  */
+
   if (
-    selected.cat ===
-    "diamonds"
-  ) {
-
-    if (playerLabelText) {
-
-      playerLabelText.textContent =
-        "Contact Number";
-
-    }
-
-
-    if (playerInput) {
-
-      playerInput.setAttribute(
-        "type",
-        "tel"
-      );
-
-      playerInput.setAttribute(
-        "inputmode",
-        "tel"
-      );
-
-      playerInput.setAttribute(
-        "placeholder",
-        "Enter your WhatsApp/Telegram number"
-      );
-
-    }
-
-
-    if (playerHelp) {
-
-      playerHelp.textContent =
-        "Add your contact number so I can contact you about your order.";
-
-    }
-
-  }
-
-  else if (
     selected.cat ===
     "redeem"
   ) {
@@ -1024,6 +982,7 @@ function openCheckout(index) {
     );
 
   }
+
 }
 
 
@@ -1042,6 +1001,7 @@ function closeCheckout() {
     );
 
   }
+
 }
 
 
@@ -1058,6 +1018,7 @@ function showPayment() {
     );
 
     return;
+
   }
 
 
@@ -1141,6 +1102,7 @@ function showPayment() {
     );
 
   }
+
 }
 
 
@@ -1159,6 +1121,7 @@ function closePayment() {
     );
 
   }
+
 }
 
 
@@ -1208,6 +1171,7 @@ function copyUPI() {
     );
 
   }
+
 }
 
 
@@ -1282,7 +1246,7 @@ async function submitOrder() {
 
 
   /*
-    Check current stock before order.
+    Final stock check before creating order.
   */
 
   try {
@@ -1361,9 +1325,7 @@ async function submitOrder() {
 
   if (
     selected.cat ===
-      "diamonds" ||
-    selected.cat ===
-      "redeem"
+    "redeem"
   ) {
 
     contact =
@@ -1603,6 +1565,7 @@ async function submitOrder() {
     }
 
   }
+
 }
 
 
@@ -1822,6 +1785,7 @@ function createTrackOrderUI() {
     );
 
   }
+
 }
 
 
@@ -2049,14 +2013,17 @@ async function trackOrder() {
     }
 
   }
+
 }
 
 
 /* ==========================================
-   ORDER STATUS
+   RENDER ORDER STATUS
    ========================================== */
 
-function renderOrderStatus(order) {
+function renderOrderStatus(
+  order
+) {
 
   const result =
     document.getElementById(
@@ -2184,6 +2151,7 @@ function renderOrderStatus(order) {
       border:1px solid ${border};
     ">
 
+
       <div style="
         color:${color};
         font-size:17px;
@@ -2276,7 +2244,9 @@ function renderOrderStatus(order) {
    HTML ESCAPE
    ========================================== */
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
   return String(
     value
